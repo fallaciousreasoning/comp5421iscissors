@@ -52,11 +52,11 @@ namespace IScissors
             var lenaTexture = Texture2D.FromStream(Device, File.OpenRead("Content//lena.jpg"));
 
             //var originalImage = new ImageScreen(lenaTexture, new List<IFilter>() {ColorFilter.GrayScale});
-            imageScreen = new ImageScreen(lenaTexture, new List<IFilter>()
+            imageScreen = new ImageScreen(ferryTexture, new List<IFilter>()
             {
-                //new GuassianBlur(3, 2f),
-                new SobelFilter(),
-                ColorFilter.GrayScale,
+                new GuassianBlur(2, 1.4f),
+                new Sobel2(),
+                //ColorFilter.GrayScale,
                 ////BasicFilter.Blur,
                 //BasicFilter.SobelHorizontal,
                 //BasicFilter.SobelVertical,

@@ -45,6 +45,8 @@
     <Compile Include="Filters\GradientFilter.cs" />
     <Compile Include="Filters\IFilter.cs" />
     <Compile Include="Filters\Lighten.cs" />
+    <Compile Include="Filters\Sobel2.cs" />
+    <Compile Include="Filters\SobelFilter.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GuassianBlur.cs" />
     <Compile Include="ImageScreen.cs" />
