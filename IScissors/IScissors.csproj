@@ -42,8 +42,11 @@
     <Compile Include="Filters\BasicFilter.cs" />
     <Compile Include="Filters\CannyFilter.cs" />
     <Compile Include="Filters\ColorFilter.cs" />
+    <Compile Include="Filters\GradientFilter.cs" />
     <Compile Include="Filters\IFilter.cs" />
+    <Compile Include="Filters\Lighten.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="GuassianBlur.cs" />
     <Compile Include="ImageScreen.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,6 +66,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\ferry.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\lena.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />

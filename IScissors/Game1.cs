@@ -49,16 +49,20 @@ namespace IScissors
 
             var calvinTexture = Texture2D.FromStream(Device, File.OpenRead("Content//calvin and hobbs.jpg"));
             var ferryTexture = Texture2D.FromStream(Device, File.OpenRead("Content//ferry.bmp"));
+            var lenaTexture = Texture2D.FromStream(Device, File.OpenRead("Content//lena.jpg"));
 
-            imageScreen = new ImageScreen(ferryTexture, new List<IFilter>()
+            //var originalImage = new ImageScreen(lenaTexture, new List<IFilter>() {ColorFilter.GrayScale});
+            imageScreen = new ImageScreen(lenaTexture, new List<IFilter>()
             {
-                
+                //new GuassianBlur(3, 2f),
+                new SobelFilter(),
+                ColorFilter.GrayScale,
                 ////BasicFilter.Blur,
                 //BasicFilter.SobelHorizontal,
                 //BasicFilter.SobelVertical,
                 ////ColorFilter.GrayScale
                 //BasicFilter.LaplacianOfTheGuassian,
-                new CannyFilter(5, 1.4f),
+                //new CannyFilter(5, 1.4f),
             });
             // TODO: use this.Content to load your game content here
         }

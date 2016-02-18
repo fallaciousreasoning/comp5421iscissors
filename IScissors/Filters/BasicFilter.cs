@@ -104,13 +104,6 @@ namespace IScissors.Filters
             {
                 for (var y = 0; y < colors.GetLength(1); ++y)
                 {
-                    if (x < FilterWidth || y < FilterWidth || x >= imageWidth - FilterWidth ||
-                        y >= imageHeight - FilterHeight)
-                    {
-                        result[x, y] = colors[x, y];
-                        continue;
-                    };
-
                     float red = 0, green =0, blue=0;
 
                     for (var filterX = 0; filterX < filter.GetLength(0); ++filterX)
@@ -119,6 +112,9 @@ namespace IScissors.Filters
                         {
                             var imageX = x - FilterWidth/2 + filterX;
                             var imageY = y - FilterHeight/2 + filterY;
+
+                            if (imageX < 0 || imageX >= imageWidth) imageX = x;
+                            if (imageY < 0 || imageY >= imageHeight) imageY = y;
 
                             var filterValue = filter[filterX, filterY];
                             var color = colors[imageX, imageY];

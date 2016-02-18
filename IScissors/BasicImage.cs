@@ -47,5 +47,36 @@ namespace IScissors
             texture.SetData(colors);
             return texture;
         }
+
+        public static BasicImage operator +(BasicImage first, BasicImage second)
+        {
+            if (first.Width != second.Width || first.Height!= second.Height) throw new ArgumentException();
+
+            var resultColors = new Color[first.Width, second.Width];
+
+            for (var i = 0; i < first.Width; ++i)
+                for (var j = 0; j < first.Height; ++j)
+                {
+                    var firstColor = first.Colors[i, j];
+                    var secondColor = second.Colors[i, j];
+
+                    byte r, g, b;
+
+                    //Taking the max
+                    //r = Math.Max(firstColor.R, secondColor.R);
+                    //g = Math.Max(firstColor.G, secondColor.G);
+                    //b = Math.Max(firstColor.B, secondColor.B);
+
+                    //Combining
+                    r = (byte)Math.Max(0, Math.Min(firstColor.R + secondColor.R, 255));
+                    g = (byte)Math.Max(0, Math.Min(firstColor.G + secondColor.G, 255));
+                    b = (byte)Math.Max(0, Math.Min(firstColor.B + secondColor.B, 255));
+
+                    var resultColor = new Color(r, g, b); //Averageing Color.Lerp(firstColor, secondColor, 0.5f);
+                    resultColors[i, j] = resultColor;
+                }
+
+            return new BasicImage(resultColors);
+        }
     }
 }
