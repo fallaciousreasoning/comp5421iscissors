@@ -7,7 +7,7 @@ namespace IScissors.Filters
 {
     public class CannyFilter : IFilter
     {
-        private BasicFilter guassianBlur;
+        private ConvulutionFilter guassianBlur;
 
         public CannyFilter(int blurSize, float sigma)
         {
@@ -28,13 +28,13 @@ namespace IScissors.Filters
                     sum += value;
                 }
 
-            guassianBlur = new BasicFilter(guassianFilter, 0, 1/sum);
+            guassianBlur = new ConvulutionFilter(guassianFilter, 0, 1/sum);
         }
         public BasicImage Apply(BasicImage input)
         {
             var blurred = guassianBlur.Apply(input);
-            var sobelX = BasicFilter.SobelHorizontal.Apply(blurred);
-            var sobelY = BasicFilter.SobelVertical.Apply(blurred);
+            var sobelX = ConvulutionFilter.SobelHorizontal.Apply(blurred);
+            var sobelY = ConvulutionFilter.SobelVertical.Apply(blurred);
 
             //TODO Edge Thinning and Double Threshold
             return sobelY;

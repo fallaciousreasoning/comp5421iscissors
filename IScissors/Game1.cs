@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using IScissors.Filters;
 using Microsoft.Xna.Framework;
@@ -54,9 +55,11 @@ namespace IScissors
             //var originalImage = new ImageScreen(lenaTexture, new List<IFilter>() {ColorFilter.GrayScale});
             imageScreen = new ImageScreen(ferryTexture, new List<IFilter>()
             {
-                new GuassianBlur(2, 1.4f),
+                new GuassianBlur(2, 1f),
+                //new BasicFilter(new [,] {{ 1f, 1f, 0f}, {0,0,0}, {-1f, -1f, 0f}},0f, 1/4f),
                 new Sobel2(),
-                //ColorFilter.GrayScale,
+                //BasicFilter.LaplacianOfTheGuassian,
+                ColorFilter.GrayScale,
                 ////BasicFilter.Blur,
                 //BasicFilter.SobelHorizontal,
                 //BasicFilter.SobelVertical,

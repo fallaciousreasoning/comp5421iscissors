@@ -8,7 +8,7 @@ namespace IScissors
 {
     public class GuassianBlur : IFilter
     {
-        private BasicFilter kernelFilter;
+        private ConvulutionFilter kernelFilter;
 
         public GuassianBlur(int radius, float sigma)
         {
@@ -27,7 +27,7 @@ namespace IScissors
                     sum += value;
                 }
 
-            kernelFilter = new BasicFilter(guassianFilter, 0, 1 / sum);
+            kernelFilter = new ConvulutionFilter(guassianFilter, 0, 1 / sum);
         }
 
         public BasicImage Apply(BasicImage input)

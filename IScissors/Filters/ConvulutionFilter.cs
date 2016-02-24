@@ -6,51 +6,51 @@ using Microsoft.Xna.Framework;
 
 namespace IScissors.Filters
 {
-    public class BasicFilter : IFilter
+    public class ConvulutionFilter : IFilter
     {
-        public static readonly BasicFilter SobelHorizontal = new BasicFilter(new float[,]
+        public static readonly ConvulutionFilter SobelHorizontal = new ConvulutionFilter(new float[,]
         {
             { -1, 0, 1 },
             {-2, 0, 2 },
             {-1, 0, 1 }
         });
 
-        public static readonly BasicFilter SobelVertical = new BasicFilter(new float[,]
+        public static readonly ConvulutionFilter SobelVertical = new ConvulutionFilter(new float[,]
         {
             {-1, -2, -1},
             {0, 0, 0},
             {1, 2, 1}
         });
 
-        public static readonly BasicFilter Emboss = new BasicFilter(new[,]
+        public static readonly ConvulutionFilter Emboss = new ConvulutionFilter(new[,]
         {
             {-1, -1, 0f },
             {-1, 0, 1f },
             {0f, 1f, 1f }
         }, 128);
 
-        public static readonly BasicFilter MeanFilter = new BasicFilter(new [,]
+        public static readonly ConvulutionFilter MeanFilter = new ConvulutionFilter(new [,]
         {
             {1,1,1 },
             {1,1f,1 },
             {1,1,1 }
         }, 0 , 1/9.0f);
 
-        public static readonly BasicFilter Sharpen = new BasicFilter(new[,]
+        public static readonly ConvulutionFilter Sharpen = new ConvulutionFilter(new[,]
         {
             {-1f, -1f, -1f},
             {-1f, 9f, -1f},
             {-1f, -1f, -1f}
         });
 
-        public static readonly BasicFilter LaplacianOfTheGuassian = new BasicFilter(new[,]
+        public static readonly ConvulutionFilter LaplacianOfTheGuassian = new ConvulutionFilter(new[,]
         {
             {-1f, -1f, -1f},
             {-1f, 8f, -1f},
             {-1f, -1f, -1f}
         });
 
-        public static readonly BasicFilter MotionBlur = new BasicFilter(new[,]
+        public static readonly ConvulutionFilter MotionBlur = new ConvulutionFilter(new[,]
         {
             {1, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 1, 0, 0, 0, 0, 0, 0, 0},
@@ -63,14 +63,14 @@ namespace IScissors.Filters
             {0, 0, 0, 0, 0, 0, 0, 0, 1}
         }, 0, 1/9.0f);
 
-        public static readonly BasicFilter Blur = new BasicFilter(new[,]
+        public static readonly ConvulutionFilter Blur = new ConvulutionFilter(new[,]
         {
             {0, 0.2f, 0},
             {0.2f, 0.2f, 0.2f},
             {0, 0.2f, 0}
         });
 
-        public static readonly BasicFilter Identity = new BasicFilter(new [,]
+        public static readonly ConvulutionFilter Identity = new ConvulutionFilter(new [,]
         {
             {0,0,0 },
             {0,1f,0 },
@@ -85,7 +85,7 @@ namespace IScissors.Filters
         private int FilterWidth { get { return filter.GetLength(0); } }
         private int FilterHeight { get { return filter.GetLength(1); } }
 
-        public BasicFilter(float[,] filter, float bias=0.0f, float factor=1.0f)
+        public ConvulutionFilter(float[,] filter, float bias=0.0f, float factor=1.0f)
         {
             this.filter = filter;
             this.bias = bias;

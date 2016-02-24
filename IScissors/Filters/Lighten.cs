@@ -7,7 +7,7 @@ namespace IScissors.Filters
 {
     public class Lighten : IFilter
     {
-        private BasicFilter kernelFilter;
+        private ConvulutionFilter kernelFilter;
 
         public Lighten(float multiplier)
         {
@@ -17,7 +17,7 @@ namespace IScissors.Filters
                 {0, multiplier, 0},
                 {0, 0, 0}
             };
-            kernelFilter = new BasicFilter(kernel);
+            kernelFilter = new ConvulutionFilter(kernel);
         }
 
         public BasicImage Apply(BasicImage input)
