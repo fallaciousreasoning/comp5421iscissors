@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BasicImage.cs" />
+    <Compile Include="Extensions\ColorExtensions.cs" />
     <Compile Include="Filters\ConvulutionFilter.cs" />
     <Compile Include="Filters\CannyFilter.cs" />
     <Compile Include="Filters\ColorFilter.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="ImageScreen.cs" />
     <Compile Include="Paths\GraphSearch.cs" />
     <Compile Include="Paths\IPathFinder.cs" />
+    <Compile Include="Paths\LiveWireDP.cs" />
     <Compile Include="Paths\PixelNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,6 +64,10 @@
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Priority Queue, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OptimizedPriorityQueue.2.0.0\lib\net20\Priority Queue.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -81,7 +87,9 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <!-- Specify the search path explicitly so the ResolveAssemblyReferences task picks the right ones -->
   <Target Name="BeforeResolveReferences">
     <CreateProperty Value="$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows;$(AssemblySearchPaths)">

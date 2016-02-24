@@ -16,11 +16,6 @@ namespace IScissors.Paths
     {
         public int X { get; set; }
         public int Y { get; set; }
-
-        public NodeState State { get; set; }
-
-        public PixelNode PreviousNode { get; set; }
-
-        public float[] LinkCosts { get; private set; } = new float[8];
+        public float[] LinkCosts { get; set; }
     }
 }
