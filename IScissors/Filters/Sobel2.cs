@@ -8,7 +8,7 @@ namespace IScissors.Filters
 {
     public class Sobel2 : IFilter
     {
-        private readonly static float[,] sobel =
+        private readonly static float[,] Sobel =
         {
             {-1, 0, 1},
             {-2, 0, 2},
@@ -17,13 +17,16 @@ namespace IScissors.Filters
 
         private int KernelSize
         {
-            get { return sobel.GetLength(0); }
+            get { return Sobel.GetLength(0); }
         }
 
         private int HalfKernelSize
         {
             get { return KernelSize/2; }
         }
+
+        public float[,] LastDirections { get; private set; }
+        public float[,] LastMagnitudes { get; private set; }
 
         public Sobel2()
         {
@@ -37,7 +40,7 @@ namespace IScissors.Filters
 
             var gX = new float[input.Width, input.Height];
             var gY = new float[input.Width, input.Height];
-            var total = new int[input.Width, input.Height];
+            var total = new float[input.Width, input.Height];
 
             var sum = 0f;
             var max = 0;
@@ -58,7 +61,7 @@ namespace IScissors.Filters
                             var color = input.Colors[curX, curY];
                             var intensity = IntensityOf(color);
 
-                            var value = intensity*sobel[i, j];
+                            var value = intensity*Sobel[i, j];
                             sum += value;
                         }
                     }
@@ -75,7 +78,7 @@ namespace IScissors.Filters
                             var color = input.Colors[curX, curY];
                             var intensity = IntensityOf(color);
 
-                            var value = intensity * sobel[j, i];
+                            var value = intensity * Sobel[j, i];
                             sum += value;
                         }
                     }
@@ -102,6 +105,8 @@ namespace IScissors.Filters
                     result[x, y] = new Color(value, value, value);
                 }
 
+            LastDirections = direction;
+            LastMagnitudes = total;
             return new BasicImage(result);
         }
 

@@ -50,6 +50,9 @@
     <Compile Include="Game1.cs" />
     <Compile Include="GuassianBlur.cs" />
     <Compile Include="ImageScreen.cs" />
+    <Compile Include="Paths\GraphSearch.cs" />
+    <Compile Include="Paths\IPathFinder.cs" />
+    <Compile Include="Paths\PixelNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -78,6 +81,7 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
+  <ItemGroup />
   <!-- Specify the search path explicitly so the ResolveAssemblyReferences task picks the right ones -->
   <Target Name="BeforeResolveReferences">
     <CreateProperty Value="$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows;$(AssemblySearchPaths)">

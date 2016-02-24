@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using IScissors.Filters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
