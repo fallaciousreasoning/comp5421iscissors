@@ -1,0 +1,34 @@
+Compulsory Features:
+	CS5421 Logo [https://course.cs.ust.hk/comp5421]
+
+	Lenna [http://www-2.cs.cmu.edu/~chuck/lennapg/lenna.shtml]
+
+	Avatar
+
+	Save Image with marked contour
+	Save mask of image
+	Debug Features
+		Pixel Node
+		Cost Graph
+		Path Tree
+		Min Path
+	Other UI Functions
+		Save Image
+		Load Image
+		Zoom In
+		Zoom Out
+		First Seed
+		Following Seeds
+		Finish Contour
+		(some) unto
+	Artifact a composite of images made using the program
+	Webpage (a report/writeup in html)
+	Bells & Whistles
+		Options:
+			One problem with the live wire is that it prefers shorter paths so will tend to cut through large object rather than wrap around them.  One way to fix this is specify a specific region in which the path must stay.  As long as this region contains the object boundary but excludes most of the interior, the path will be forced to follow the boundary.  One way of specifying such a region is to use a thick (e.g., 50 pixel wide) paint brush.  Implement this feature.  Note:  we already provide support for brushing a region using a selection buffer, in the same way as for project0.
+			Allow setting of image blur before computing the path and describe optimizations
+			Try different cost functions (such as the one decided in the paper)
+			Seed snapping feature (the seed point also snaps to an edge)
+			Implement Path Cooling (as described in the paper)
+				Implement Dynamic Training, as described in the paper
+					Implement a live wire with sub pixel precision. 
