@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 using IScissors.Filters;
+using IScissors.Paths;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Color = Microsoft.Xna.Framework.Color;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace IScissors
 {
@@ -16,9 +22,12 @@ namespace IScissors
         private static GraphicsDeviceManager graphics;
         public static GraphicsDevice Device { get { return graphics.GraphicsDevice; } }
 
-        SpriteBatch spriteBatch;
+        public static Input Input { get; private set; }
 
-        private ImageScreen imageScreen;
+        SpriteBatch spriteBatch;
+        private Matrix world = Matrix.Identity;
+
+        private ScissorsScreen imageScreen;
 
         public Game1()
         {
@@ -34,9 +43,13 @@ namespace IScissors
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
+
+            Input = new Input(this);
+            Components.Add(Input);
+
+            Menu menu = new Menu(this);
+            Components.Add(menu);
         }
 
         /// <summary>
@@ -52,21 +65,29 @@ namespace IScissors
             var ferryTexture = Texture2D.FromStream(Device, File.OpenRead("Content//ferry.bmp"));
             var lenaTexture = Texture2D.FromStream(Device, File.OpenRead("Content//lena.jpg"));
 
+            imageScreen = new ScissorsScreen();
+            imageScreen.Load(ferryTexture);
+
+            imageScreen.AddSeed(22, 152);
+            imageScreen.AddSeed(210, 150);
+            
             //var originalImage = new ImageScreen(lenaTexture, new List<IFilter>() {ColorFilter.GrayScale});
-            imageScreen = new ImageScreen(ferryTexture, new List<IFilter>()
-            {
-                new GuassianBlur(2, 1f),
-                //new BasicFilter(new [,] {{ 1f, 1f, 0f}, {0,0,0}, {-1f, -1f, 0f}},0f, 1/4f),
-                new Sobel2(),
-                //BasicFilter.LaplacianOfTheGuassian,
-                ColorFilter.GrayScale,
-                ////BasicFilter.Blur,
-                //BasicFilter.SobelHorizontal,
-                //BasicFilter.SobelVertical,
-                ////ColorFilter.GrayScale
-                //BasicFilter.LaplacianOfTheGuassian,
-                //new CannyFilter(5, 1.4f),
-            });
+            //imageScreen = new ImageScreen(ferryTexture, new List<IFilter>()
+            //{
+            //    new GuassianBlur(2, 1f),
+            //    //new BasicFilter(new [,] {{ 1f, 1f, 0f}, {0,0,0}, {-1f, -1f, 0f}},0f, 1/4f),
+            //    new Sobel2(),
+            //    //BasicFilter.LaplacianOfTheGuassian,
+            //    ColorFilter.GrayScale,
+            //    ////BasicFilter.Blur,
+            //    //BasicFilter.SobelHorizontal,
+            //    //BasicFilter.SobelVertical,
+            //    ////ColorFilter.GrayScale
+            //    //BasicFilter.LaplacianOfTheGuassian,
+            //    //new CannyFilter(5, 1.4f),
+            //});
+
+            
             // TODO: use this.Content to load your game content here
         }
 
@@ -102,7 +123,7 @@ namespace IScissors
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(0, null, null, null, null, null, world);
 
             imageScreen.Draw(spriteBatch);
 

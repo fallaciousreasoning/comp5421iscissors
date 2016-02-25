@@ -51,12 +51,16 @@
     <Compile Include="Game1.cs" />
     <Compile Include="GuassianBlur.cs" />
     <Compile Include="ImageScreen.cs" />
+    <Compile Include="Input.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="Paths\GraphSearch.cs" />
     <Compile Include="Paths\IPathFinder.cs" />
     <Compile Include="Paths\LiveWireDP.cs" />
     <Compile Include="Paths\PixelNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScissorsScreen.cs" />
+    <Compile Include="TextureUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
@@ -70,6 +74,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>

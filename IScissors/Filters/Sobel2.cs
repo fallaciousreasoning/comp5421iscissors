@@ -27,6 +27,7 @@ namespace IScissors.Filters
 
         public float[,] LastDirections { get; private set; }
         public float[,] LastMagnitudes { get; private set; }
+        public float LastMax { get; private set; }
 
         public Sobel2()
         {
@@ -43,7 +44,7 @@ namespace IScissors.Filters
             var total = new float[input.Width, input.Height];
 
             var sum = 0f;
-            var max = 0;
+            var max = 0f;
 
             for (var x = HalfKernelSize; x < input.Width - HalfKernelSize; ++x)
             {
@@ -107,6 +108,8 @@ namespace IScissors.Filters
 
             LastDirections = direction;
             LastMagnitudes = total;
+            LastMax = max;
+
             return new BasicImage(result);
         }
 

@@ -81,7 +81,7 @@ namespace IScissors.Paths
                     index ++;
                     if (x < 0 || y < 0 || x >= originalImage.Width || y >= originalImage.Height)
                     {
-                        node.LinkCosts[index - 1] = -1;
+                        node.LinkDerivates[index - 1] = -1;
                         continue;
                     }
 
