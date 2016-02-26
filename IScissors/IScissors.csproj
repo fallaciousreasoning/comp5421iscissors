@@ -53,7 +53,6 @@
     <Compile Include="ImageScreen.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Menu.cs" />
-    <Compile Include="Paths\GraphSearch.cs" />
     <Compile Include="Paths\IPathFinder.cs" />
     <Compile Include="Paths\LiveWireDP.cs" />
     <Compile Include="Paths\PixelNode.cs" />

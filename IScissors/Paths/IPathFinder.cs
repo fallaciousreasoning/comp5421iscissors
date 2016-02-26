@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace IScissors.Paths
 {
     public interface IPathFinder
     {
-        PixelNode FindPath(BasicImage image, int startX, int startY, int endX, int endY);
+        void SetSeed(int x, int y);
+        LinkedList<Point> FindPath(int endX, int endY);
     }
 }

@@ -64,11 +64,12 @@ namespace IScissors
             {
                 //TODO add the path between the last seed and this one
                 var previous = seedPoints.Last.Value;
-                var path = pathFinder.LiveWire(previous.X, previous.Y, seed.X, seed.Y);
+                var path = pathFinder.FindPath(seed.X, seed.Y);
                 foreach (var node in path) solidPath.AddLast(node);
             }
 
             seedPoints.AddLast(seed);
+            pathFinder.SetSeed(x, y);
         }
 
         public void Close()
@@ -89,7 +90,7 @@ namespace IScissors
                 || mousePos.X < 0 || mousePos.Y < 0 || mousePos.X >= originalImage.Width || mousePos.Y > originalImage.Height) return;
             
             var start = seedPoints.Last.Value;
-            unconfirmedPath = pathFinder.LiveWire(start.X, start.Y, mousePos.X, mousePos.Y);
+            unconfirmedPath = pathFinder.FindPath(mousePos.X, mousePos.Y);
             updated = false;
             lastMousePos = mousePos;
         }

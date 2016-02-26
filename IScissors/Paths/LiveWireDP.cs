@@ -9,7 +9,7 @@ using Priority_Queue;
 
 namespace IScissors.Paths
 {
-    public class LiveWireDP
+    public class LiveWireDP : IPathFinder
     {
         public Texture2D CostTexture { get; private set; }
         private int iteration;
@@ -17,6 +17,9 @@ namespace IScissors.Paths
         private readonly BasicImage originalImage;
         private readonly BasicImage costImage;
         private readonly PixelNode[,] pixelNodes;
+
+        private int seedX;
+        private int seedY;
 
         private float maxDerivative;
         private float maxEdgeCost;
@@ -224,8 +227,11 @@ namespace IScissors.Paths
             return (byte)originalImage.Colors[x, y].Intensity();
         }
 
-        public LinkedList<Point> LiveWire(int seedX, int seedY, int endX, int endY)
+        public void SetSeed(int seedX, int seedY)
         {
+            this.seedX = seedX;
+            this.seedY = seedY;
+
             var priorityQueue = new FastPriorityQueue<PixelNode>(originalImage.Width * originalImage.Height);
 
             var seed = pixelNodes[seedX, seedY];
@@ -251,7 +257,7 @@ namespace IScissors.Paths
                         if (neighbor.Iteration == iteration && neighbor.State == NodeState.Expanded) continue;
 
                         //Calculate the cost of reaching the node this way
-                        var cost = current.Cost + current.LinkCosts[(i + 1) + 3*(j + 1)];
+                        var cost = current.Cost + current.LinkCosts[(i + 1) + 3 * (j + 1)];
 
                         //If we haven't looked at the node this iteration
                         if (neighbor.Iteration != iteration || neighbor.State == NodeState.Initial)
@@ -273,7 +279,13 @@ namespace IScissors.Paths
                 }
 
             } while (priorityQueue.Count > 0);
-            
+        }
+
+        public LinkedList<Point> FindPath(int endX, int endY)
+        {
+            //If the point isn't on the image we shouldn't be returning anything
+            if(!OnImage(endX, endY)) return new LinkedList<Point>();
+
             var path = new LinkedList<Point>();
 
             var c = pixelNodes[endX, endY];
