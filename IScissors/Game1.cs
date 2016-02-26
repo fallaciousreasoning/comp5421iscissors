@@ -26,9 +26,8 @@ namespace IScissors
         public static Input Input { get; private set; }
 
         SpriteBatch spriteBatch;
-        private Matrix world = Matrix.Identity;
 
-        private ScissorsScreen imageScreen;
+        private Editor editor;
 
         public Game1()
         {
@@ -68,14 +67,7 @@ namespace IScissors
             var ferryTexture = Texture2D.FromStream(Device, File.OpenRead("Content//ferry.bmp"));
             var lenaTexture = Texture2D.FromStream(Device, File.OpenRead("Content//lena.jpg"));
 
-            imageScreen = new ScissorsScreen();
-            imageScreen.Load(ferryTexture);
-            //imageScreen.AddSeed(0, 2);
-            //imageScreen.AddSeed(4, 2);
-
-            imageScreen.AddSeed(22, 152);
-            imageScreen.AddSeed(210, 150);
-
+            editor = new Editor();
             //var originalImage = new ImageScreen(lenaTexture, new List<IFilter>() {ColorFilter.GrayScale});
             //imageScreen = new ImageScreen(ferryTexture, new List<IFilter>()
             //{
@@ -115,13 +107,7 @@ namespace IScissors
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            var mousePoint = new Point((int) Input.MousePosition.X, (int) Input.MousePosition.Y);
-
-            imageScreen.SetMousePos(mousePoint.X, mousePoint.Y);
-            imageScreen.Update();
-
-            if (Input.MouseClicked()) 
-                imageScreen.AddSeed(mousePoint.X, mousePoint.Y);
+            editor.Update();
 
             base.Update(gameTime);
         }
@@ -134,11 +120,7 @@ namespace IScissors
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(0, null, null, null, null, null, world);
-
-            imageScreen.Draw(spriteBatch);
-
-            spriteBatch.End();
+            editor.Draw();
 
             base.Draw(gameTime);
         }

@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace IScissors
 {
-    public class ScissorsScreen
+    public class Scissors
     {
         private Texture2D point = TextureUtil.CreateTexture(1, 1, Color.White);
          
@@ -34,7 +34,7 @@ namespace IScissors
         private Point lastMousePos = new Point(0,0);
         private bool updated;
 
-        public ScissorsScreen()
+        public Scissors()
         {
             
         }
@@ -58,6 +58,8 @@ namespace IScissors
 
         public void AddSeed(int x, int y)
         {
+            if (originalTexture == null) return;
+
             var seed = new Point(x,y);
             
             if (seedPoints.Count > 0)
@@ -86,8 +88,10 @@ namespace IScissors
 
         public void Update()
         {
-            if (seedPoints.Count == 0 || !updated || (lastMousePos.X == mousePos.X && lastMousePos.Y == mousePos.Y)
-                || mousePos.X < 0 || mousePos.Y < 0 || mousePos.X >= originalImage.Width || mousePos.Y > originalImage.Height) return;
+            if (originalTexture == null || seedPoints.Count == 0 || !updated ||
+                (lastMousePos.X == mousePos.X && lastMousePos.Y == mousePos.Y)
+                || mousePos.X < 0 || mousePos.Y < 0 || mousePos.X >= originalImage.Width ||
+                mousePos.Y > originalImage.Height) return;
             
             var start = seedPoints.Last.Value;
             unconfirmedPath = pathFinder.FindPath(mousePos.X, mousePos.Y);

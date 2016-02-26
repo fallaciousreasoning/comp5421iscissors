@@ -229,6 +229,8 @@ namespace IScissors.Paths
 
         public void SetSeed(int seedX, int seedY)
         {
+            if (!OnImage(seedX, seedY)) return;
+
             this.seedX = seedX;
             this.seedY = seedY;
 
