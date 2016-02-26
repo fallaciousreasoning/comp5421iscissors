@@ -277,6 +277,7 @@ namespace IScissors.Paths
             var path = new LinkedList<Point>();
 
             var c = pixelNodes[endX, endY];
+            pixelNodes[seedX, seedY].Previous = null;
             do
             {
                 path.AddFirst(new Point(c.X, c.Y));

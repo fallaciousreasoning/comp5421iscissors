@@ -33,6 +33,8 @@ namespace IScissors
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            IsMouseVisible = true;
         }
 
         /// <summary>
@@ -112,6 +114,7 @@ namespace IScissors
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            imageScreen.SetMousePos((int)Input.MousePosition.X, (int)Input.MousePosition.Y);
             imageScreen.Update();
 
             base.Update(gameTime);
