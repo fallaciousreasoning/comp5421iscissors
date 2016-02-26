@@ -102,11 +102,16 @@ namespace IScissors
             spriteBatch.Draw(originalTexture, Vector2.Zero, Color.White);
             //spriteBatch.Draw(pathFinder.CostTexture, Vector2.Zero, Color.White);
 
+            //Draw the confirmed path
             foreach(var p in solidPath)
                 spriteBatch.Draw(point, new Vector2(p.X, p.Y), Color.Red);
 
+            //Draw the unconfirmed path
             foreach (var p in unconfirmedPath)
                 spriteBatch.Draw(point, new Vector2(p.X, p.Y), Color.Orange);
+
+            foreach (var p in seedPoints)
+                spriteBatch.Draw(point, new Vector2(p.X, p.Y), null, Color.Green, MathHelper.PiOver4, new Vector2(0.5f), new Vector2(8), SpriteEffects.None, 0);
         }
     }
 }
