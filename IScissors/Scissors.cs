@@ -10,6 +10,10 @@ namespace IScissors
 {
     public class Scissors
     {
+        public Color ConfirmedPathColor = Color.Red;
+        public Color UnconfirmedPathColor = Color.Orange;
+        public Color SeedPointColor = Color.Green;
+
         private Texture2D point = TextureUtil.CreateTexture(1, 1, Color.White);
          
         //The seed points the user has picked
@@ -34,9 +38,39 @@ namespace IScissors
         private Point lastMousePos = new Point(0,0);
         private bool updated;
 
+        //Indicates whether the path to the mouse point should be drawn
+        private bool active = false;
+
         public Scissors()
         {
             
+        }
+
+        public BasicImage Mask()
+        {
+            var colors = new Color[originalImage.Width, originalImage.Height];
+            foreach (var point in solidPath)
+                colors[point.X, point.Y] = ConfirmedPathColor;
+
+            //TODO fill the shape made by the contour
+
+            //Pretty much, any pixels that are colored by the filled contour should be made a part of the masked image
+            for (var i = 0; i < originalImage.Width; ++i)
+                for (var j = 0; j < originalImage.Height; ++j)
+                {
+                    if (colors[i, j] != Color.Transparent)
+                        colors[i, j] = originalImage.Colors[i, j];
+                }
+
+            return new BasicImage(colors);
+        }
+
+        public BasicImage ImageWithContour()
+        {
+            var image = originalImage.Duplicate();
+            foreach (var point in solidPath)
+                image.Colors[point.X, point.Y] = ConfirmedPathColor;
+            return image;
         }
 
         public void Load(Texture2D texture)
@@ -54,6 +88,7 @@ namespace IScissors
             seedPoints.Clear();
             solidPath.Clear();
             unconfirmedPath.Clear();
+            active = false;
         }
 
         public void AddSeed(int x, int y)
@@ -72,12 +107,17 @@ namespace IScissors
 
             seedPoints.AddLast(seed);
             pathFinder.SetSeed(x, y);
+
+            active = true;
         }
 
         public void Close()
         {
             var first = seedPoints.First.Value;
             AddSeed(first.X, first.Y);
+
+            active = false;
+            unconfirmedPath.Clear();
         }
 
         public void SetMousePos(int x, int y)
@@ -91,7 +131,7 @@ namespace IScissors
             if (originalTexture == null || seedPoints.Count == 0 || !updated ||
                 (lastMousePos.X == mousePos.X && lastMousePos.Y == mousePos.Y)
                 || mousePos.X < 0 || mousePos.Y < 0 || mousePos.X >= originalImage.Width ||
-                mousePos.Y > originalImage.Height) return;
+                mousePos.Y > originalImage.Height || !active) return;
             
             var start = seedPoints.Last.Value;
             unconfirmedPath = pathFinder.FindPath(mousePos.X, mousePos.Y);
@@ -108,14 +148,14 @@ namespace IScissors
 
             //Draw the confirmed path
             foreach(var p in solidPath)
-                spriteBatch.Draw(point, new Vector2(p.X, p.Y), Color.Red);
+                spriteBatch.Draw(point, new Vector2(p.X, p.Y), ConfirmedPathColor);
 
             //Draw the unconfirmed path
             foreach (var p in unconfirmedPath)
-                spriteBatch.Draw(point, new Vector2(p.X, p.Y), Color.Orange);
+                spriteBatch.Draw(point, new Vector2(p.X, p.Y), UnconfirmedPathColor);
 
             foreach (var p in seedPoints)
-                spriteBatch.Draw(point, new Vector2(p.X, p.Y), null, Color.Green, MathHelper.PiOver4, new Vector2(0.5f), new Vector2(8), SpriteEffects.None, 0);
+                spriteBatch.Draw(point, new Vector2(p.X, p.Y), null, SeedPointColor, MathHelper.PiOver4, new Vector2(0.5f), new Vector2(8), SpriteEffects.None, 0);
         }
     }
 }

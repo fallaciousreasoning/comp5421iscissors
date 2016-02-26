@@ -49,6 +49,19 @@ namespace IScissors
             return texture;
         }
 
+        public BasicImage Duplicate()
+        {
+            var colors = new Color[Width, Height];
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    colors[i, j] = Colors[i, j];
+                }
+            }
+            return new BasicImage(colors);
+        }
+
         public static BasicImage operator +(BasicImage first, BasicImage second)
         {
             if (first.Width != second.Width || first.Height!= second.Height) throw new ArgumentException();
