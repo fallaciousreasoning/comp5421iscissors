@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 using Color = Microsoft.Xna.Framework.Color;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
+using Point = System.Drawing.Point;
 
 namespace IScissors
 {
@@ -114,8 +115,13 @@ namespace IScissors
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            imageScreen.SetMousePos((int)Input.MousePosition.X, (int)Input.MousePosition.Y);
+            var mousePoint = new Point((int) Input.MousePosition.X, (int) Input.MousePosition.Y);
+
+            imageScreen.SetMousePos(mousePoint.X, mousePoint.Y);
             imageScreen.Update();
+
+            if (Input.MouseClicked()) 
+                imageScreen.AddSeed(mousePoint.X, mousePoint.Y);
 
             base.Update(gameTime);
         }

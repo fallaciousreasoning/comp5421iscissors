@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Priority_Queue;
 
 namespace IScissors.Paths
 {
@@ -12,7 +13,7 @@ namespace IScissors.Paths
         Expanded,
     }
 
-    public class PixelNode
+    public class PixelNode : FastPriorityQueueNode
     {
         public int X { get; set; }
         public int Y { get; set; }

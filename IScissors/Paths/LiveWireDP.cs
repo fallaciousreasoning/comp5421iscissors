@@ -226,7 +226,7 @@ namespace IScissors.Paths
 
         public LinkedList<Point> LiveWire(int seedX, int seedY, int endX, int endY)
         {
-            var priorityQueue = new SimplePriorityQueue<PixelNode>();
+            var priorityQueue = new FastPriorityQueue<PixelNode>(originalImage.Width * originalImage.Height);
 
             var seed = pixelNodes[seedX, seedY];
             seed.Previous = null;
