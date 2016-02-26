@@ -96,7 +96,7 @@ namespace IScissors
             if (originalTexture == null) return;
 
             spriteBatch.Draw(originalTexture, Vector2.Zero, Color.White);
-            spriteBatch.Draw(pathFinder.CostTexture, Vector2.Zero, Color.White);
+            //spriteBatch.Draw(pathFinder.CostTexture, Vector2.Zero, Color.White);
 
             foreach(var p in solidPath)
                 spriteBatch.Draw(point, new Vector2(p.X, p.Y), Color.Red);

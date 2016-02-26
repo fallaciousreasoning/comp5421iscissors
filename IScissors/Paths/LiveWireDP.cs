@@ -25,6 +25,7 @@ namespace IScissors.Paths
         {
             this.originalImage = image;
 
+            //Generate the costs for the pixels
             pixelNodes = new PixelNode[image.Width,image.Height];
             for (int i = 0; i < image.Width; i++)
             {
@@ -33,34 +34,14 @@ namespace IScissors.Paths
                     pixelNodes[i,j] = new PixelNode()
                     {
                         X = i,
-                        Y = j,
-                        LinkDerivates = LoadCosts(i, j)
+                        Y = j
                     };
+                    LoadDerivatives(i, j);
                 }
             }
-            
-            for (var x = 0; x < image.Width; ++x)
-                for (var y = 0; y < image.Height; ++y)
-                {
-                    //TODO initialize weights on the pixel node.
-                    var pixelNode = pixelNodes[x, y];
-                    for (var i = -1; i <= 1; i++)
-                    {
-                        for (var j = -1; j <= 1; j++)
-                        {
-                            var length = (float)Math.Sqrt(i*i + j*j);
-                            var cost = (maxDerivative - pixelNode.LinkDerivates[(i + 1) + 3*(j + 1)])*length;
-                            if (cost > maxEdgeCost)
-                                maxEdgeCost = cost;
 
-                            pixelNode.LinkCosts = new float[9];
-                            pixelNode.LinkCosts[(i + 1) + 3*(j + 1)] = cost;
-                        }
-                    }
-
-                    //TODO set the color on the gradient image (maybe..?)
-                }
-
+            LoadCosts();
+            //Here we are building the cost image
             var costColors = new Color[originalImage.Width*3,originalImage.Height*3];
             for (var i = 0; i < originalImage.Width; i++)
                 for (var j = 0; j < originalImage.Height; ++j)
@@ -70,12 +51,29 @@ namespace IScissors.Paths
                     for (var k = 0; k < 3; ++k)
                         for (var l = 0; l < 3; ++l)
                         {
-                            costColors[x + k, y + k] = ColorExtensions.FromIntensity(pixelNodes[i, j].LinkCosts[k + 3*l]/maxEdgeCost);
+                            costColors[x + k, y + k] = ColorExtensions.FromIntensity(pixelNodes[i, j].LinkCosts[k + 3*l]/255);
                         }
                     costColors[x + 1, y + 1] = originalImage.Colors[i, j];
                 }
             costImage = new BasicImage(costColors);
             CostTexture = costImage.ToTexture();
+        }
+
+        private void LoadCosts()
+        {
+            var lengths = new float[9];
+            for(var i = -1; i <= 1; ++i)
+                for (var j = -1; j <= 1; ++j)
+                    lengths[(i + 1) + (j+1)*3] = (float)Math.Sqrt(i*i + j*j);
+
+            for (var x = 0; x < originalImage.Width; ++x)
+                for (var y = 0; y < originalImage.Height; ++y)
+                {
+                    var pixelNode = pixelNodes[x, y];
+
+                    for (var k = 0; k < pixelNode.LinkDerivates.Length; ++k)
+                        pixelNode.LinkCosts[k] = (maxDerivative - pixelNode.LinkDerivates[k])*lengths[k];
+                }
         }
 
         /// <summary>
@@ -87,67 +85,108 @@ namespace IScissors.Paths
         /// </summary>
         /// <param name="x">The x position of the pixel</param>
         /// <param name="y">The y position of the pixel</param>
-        /// <returns>The costs for getting to the respective nodes</returns>
-        private float[] LoadCosts(int x, int y)
+        private void LoadDerivatives(int x, int y)
         {
-            var sqrt2 = (float)Math.Sqrt(2f);
             var costs = new float[9];
+            var start = new Point(x, y);
 
-            //TODO check the pixel is valid
-
-            //Cost to top left node
-            if (x >= 1 && y >= 1)
-                costs[0] = Math.Abs(Intensity(x - 1, y) - Intensity(x, y - 1))/sqrt2;
-
-            //Cost to top node
-            if (x >= 1 && x + 1 < originalImage.Width && y >= 1)
-            costs[1] =
-                Math.Abs((Intensity(x - 1, y) + Intensity(x - 1, y - 1))/2f -
-                         (Intensity(x + 1, y) + Intensity(x + 1, y - 1))/2f)/2f;
-
-            //Cost to top right node
-            if (x + 1 < originalImage.Width && y >= 1)
-                costs[2] = Math.Abs(Intensity(x+1, y) - Intensity(x, y - 1))/sqrt2;
-
-            //Cost to left node
-            if (x >= 1 && y >= 1 && y + 1 < originalImage.Height)
-                costs[3] =
-                Math.Abs((Intensity(x - 1, y - 1) + Intensity(x, y - 1))/2f -
-                         (Intensity(x - 1, y + 1) + Intensity(x, y + 1))/2f)/2;
-
-            //Ourself
+            costs[0] = DiagonalDerivative(start, start + new Point(-1));
+            costs[1] = VerticalDerivative(start, start + new Point(0, -1));
+            costs[2] = DiagonalDerivative(start, start + new Point(1, -1));
+            costs[3] = HorizontalDerivative(start, start + new Point(-1, 0));
             costs[4] = 0;
-
-            //Cost to right node
-            if (x + 1 < originalImage.Width && y >= 1 && y + 1 < originalImage.Height)
-                costs[5] =
-                Math.Abs((Intensity(x, y - 1) + Intensity(x + 1, y - 1))/2f -
-                         (Intensity(x, y + 1) + Intensity(x + 1, y + 1))/2f)/2;
-
-            //Cost to bottom left node
-            if (x >= 1 && y + 1 < originalImage.Height)
-                costs[6] = Math.Abs(Intensity(x - 1, y) - Intensity(x, y + 1)) / sqrt2;
-
-            //Cost to bottom node
-            if (x >= 1 && x + 1 < originalImage.Width && y + 1 < originalImage.Height)
-                costs[7] =
-                Math.Abs((Intensity(x - 1, y) + Intensity(x - 1, y + 1))/2f -
-                         (Intensity(x + 1, y) + Intensity(x + 1, y + 1))/2f)/2f;
-
-            //Cost to bottom right node
-            if (x + 1 < originalImage.Width && y + 1 < originalImage.Height)
-                costs[8] = Math.Abs(Intensity(x + 1, y) - Intensity(x, y + 1)) / sqrt2;
+            costs[5] = HorizontalDerivative(start, start + new Point(1, 0));
+            costs[6] = DiagonalDerivative(start, start + new Point(-1, 1));
+            costs[7] = VerticalDerivative(start, start + new Point(0, 1));
+            costs[8] = DiagonalDerivative(start, start + new Point(1));
 
             foreach (var cost in costs)
+            {
                 if (cost > maxDerivative)
                     maxDerivative = cost;
+                if (cost != 0)
+                {
+                    int foo = 8;
+                }
+            }
+        }
 
-            return costs;
+        private bool NearSameAndNotEdge(int x, int y)
+        {
+            var color = originalImage.Colors[x, y];
+            for (var i = -1; i <=1;++i)
+                for (var j = -1; j <= 1; ++j)
+                {
+                    if (!OnImage(x + i, y + j)) return false;
+                    if (color != originalImage.Colors[x + i, y + j]) return false;
+                }
+            return true;
+        }
+
+        private float HorizontalDerivative(Point start, Point end)
+        {
+            if (!OnImage(new Point(end.X, start.Y + 1)) || !OnImage(new Point(end.X, start.Y - 1))) return 0;
+
+            var color1 = originalImage.Colors[start.X, start.Y - 1].ToByteArray();
+            var color2 = originalImage.Colors[end.X, start.Y - 1].ToByteArray();
+            var color3 = originalImage.Colors[start.X, start.Y + 1].ToByteArray();
+            var color4 = originalImage.Colors[end.X, start.Y + 1].ToByteArray();
+
+            var dd = 0f;
+            var channelDerivatives = new int[3];
+            for (var i = 0; i < channelDerivatives.Length; ++i)
+            {
+                channelDerivatives[i] = color1[i] + color2[i] - color3[i] - color4[i];
+                dd += channelDerivatives[i]*channelDerivatives[i];
+            }
+
+            dd = (float)Math.Sqrt(dd/48.0);
+            return dd;
+        }
+
+        private float VerticalDerivative(Point start, Point end)
+        {
+            if (!OnImage(new Point(start.X - 1, end.Y)) || !OnImage(new Point(start.X + 1, end.Y))) return 0;
+
+            var color1 = originalImage.Colors[start.X-1, start.Y].ToByteArray();
+            var color2 = originalImage.Colors[end.X-1, start.Y].ToByteArray();
+            var color3 = originalImage.Colors[start.X+1, start.Y].ToByteArray();
+            var color4 = originalImage.Colors[end.X+1, start.Y].ToByteArray();
+
+            var dd = 0f;
+            var channelDerivatives = new int[3];
+            for (var i = 0; i < channelDerivatives.Length; ++i)
+            {
+                channelDerivatives[i] = color1[i] + color2[i] - color3[i] - color4[i];
+                dd += channelDerivatives[i] * channelDerivatives[i];
+            }
+
+            dd = (float)Math.Sqrt(dd / 48.0);
+            return dd;
+        }
+
+        private float DiagonalDerivative(Point start, Point end)
+        {
+            if (!OnImage(end)) return 0;
+
+            var color1 = originalImage.Colors[end.X, start.Y];
+            var color2 = originalImage.Colors[start.X, end.Y];
+
+            var dr = color1.R - color2.R;
+            var dg = color1.G - color2.G;
+            var db = color1.B - color2.B;
+
+            return (float)Math.Sqrt((dr*dr + dg*dg + db*db) / 6.0);
         }
 
         private bool OnImage(int x, int y)
         {
             return x >= 0 && y >= 0 && x < originalImage.Width && y < originalImage.Height;
+        }
+
+        private bool OnImage(Point p)
+        {
+            return OnImage(p.X, p.Y);
         }
 
         private byte R(int x, int y)
@@ -197,7 +236,7 @@ namespace IScissors.Paths
                         if (neighbor.Iteration == iteration && neighbor.State == NodeState.Expanded) continue;
 
                         //Calculate the cost of reaching the node this way
-                        var cost = current.Cost + current.LinkDerivates[(i + 1) + 3*(j + 1)];
+                        var cost = current.Cost + current.LinkCosts[(i + 1) + 3*(j + 1)];
 
                         //If we haven't looked at the node this iteration
                         if (neighbor.Iteration != iteration || neighbor.State == NodeState.Initial)

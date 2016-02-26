@@ -18,5 +18,16 @@ namespace IScissors.Extensions
             var b = (byte) (intensity*255);
             return new Color(b,b,b);
         }
+
+        public static byte[] ToByteArray(this Color color)
+        {
+            return new[]
+            {
+                color.R,
+                color.G,
+                color.B,
+                color.A
+            };
+        }
     }
 }

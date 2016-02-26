@@ -62,15 +62,17 @@ namespace IScissors
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             var calvinTexture = Texture2D.FromStream(Device, File.OpenRead("Content//calvin and hobbs.jpg"));
-            var ferryTexture = Texture2D.FromStream(Device, File.OpenRead("Content//ferry.bmp"));
+            var ferryTexture = Texture2D.FromStream(Device, File.OpenRead("Content//blob.bmp"));
             var lenaTexture = Texture2D.FromStream(Device, File.OpenRead("Content//lena.jpg"));
 
             imageScreen = new ScissorsScreen();
             imageScreen.Load(ferryTexture);
+            //imageScreen.AddSeed(0, 2);
+            //imageScreen.AddSeed(4, 2);
 
             imageScreen.AddSeed(22, 152);
             imageScreen.AddSeed(210, 150);
-            
+
             //var originalImage = new ImageScreen(lenaTexture, new List<IFilter>() {ColorFilter.GrayScale});
             //imageScreen = new ImageScreen(ferryTexture, new List<IFilter>()
             //{
@@ -87,7 +89,7 @@ namespace IScissors
             //    //new CannyFilter(5, 1.4f),
             //});
 
-            
+
             // TODO: use this.Content to load your game content here
         }
 
