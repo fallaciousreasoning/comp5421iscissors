@@ -72,8 +72,7 @@ namespace IScissors.Paths
                     var pixelNode = pixelNodes[x, y];
 
                     for (var k = 0; k < pixelNode.LinkDerivates.Length; ++k)
-                        pixelNode.LinkCosts[k] = pixelNode.LinkDerivates[k]*lengths[k];
-                    //(maxDerivative - pixelNode.LinkDerivates[k])*lengths[k];
+                        pixelNode.LinkCosts[k] = (maxDerivative - pixelNode.LinkDerivates[k])*lengths[k];
                 }
         }
 
@@ -91,7 +90,7 @@ namespace IScissors.Paths
             var costs = new float[9];
             var start = new Point(x, y);
 
-            /*costs[0] = DiagonalDerivative(start, start + new Point(-1));
+            costs[0] = DiagonalDerivative(start, start + new Point(-1));
             costs[1] = VerticalDerivative(start, start + new Point(0, -1));
             costs[2] = DiagonalDerivative(start, start + new Point(1, -1));
             costs[3] = HorizontalDerivative(start, start + new Point(-1, 0));
@@ -99,20 +98,20 @@ namespace IScissors.Paths
             costs[5] = HorizontalDerivative(start, start + new Point(1, 0));
             costs[6] = DiagonalDerivative(start, start + new Point(-1, 1));
             costs[7] = VerticalDerivative(start, start + new Point(0, 1));
-            costs[8] = DiagonalDerivative(start, start + new Point(1));*/
-            for (var i = -1; i <= 1; ++i)
-                for (var j = -1; j <= 1; ++j)
-                {
-                    if (!OnImage(x + i, y + j)) continue;
+            costs[8] = DiagonalDerivative(start, start + new Point(1));
+            //for (var i = -1; i <= 1; ++i)
+            //    for (var j = -1; j <= 1; ++j)
+            //    {
+            //        if (!OnImage(x + i, y + j)) continue;
 
-                    var c1 = originalImage.Colors[x, y];
-                    var c2 = originalImage.Colors[x + i, y + j];
-                    var dr = c1.R - c2.R;
-                    var dg = c1.G - c2.G;
-                    var db = c1.B - c2.B;
+            //        var c1 = originalImage.Colors[x, y];
+            //        var c2 = originalImage.Colors[x + i, y + j];
+            //        var dr = c1.R - c2.R;
+            //        var dg = c1.G - c2.G;
+            //        var db = c1.B - c2.B;
 
-                    costs[(i + 1) + 3*(j + 1)] = (float)Math.Sqrt(dr*dr + dg*dg + db*db);
-                }
+            //        costs[(i + 1) + 3*(j + 1)] = (float)Math.Sqrt(dr*dr + dg*dg + db*db);
+            //    }
 
             foreach (var cost in costs)
             {
