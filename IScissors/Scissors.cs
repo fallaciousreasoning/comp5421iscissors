@@ -43,7 +43,6 @@ namespace IScissors
 
         public Scissors()
         {
-            
         }
 
         public BasicImage Mask()

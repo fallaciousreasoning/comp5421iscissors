@@ -52,6 +52,8 @@ namespace IScissors
 
             Menu menu = new Menu(this);
             Components.Add(menu);
+
+            editor = new Editor(Device, Input);
         }
 
         /// <summary>
@@ -66,8 +68,6 @@ namespace IScissors
             var calvinTexture = Texture2D.FromStream(Device, File.OpenRead("Content//calvin and hobbs.jpg"));
             var ferryTexture = Texture2D.FromStream(Device, File.OpenRead("Content//ferry.bmp"));
             var lenaTexture = Texture2D.FromStream(Device, File.OpenRead("Content//lena.jpg"));
-
-            editor = new Editor();
             //var originalImage = new ImageScreen(lenaTexture, new List<IFilter>() {ColorFilter.GrayScale});
             //imageScreen = new ImageScreen(ferryTexture, new List<IFilter>()
             //{

@@ -12,7 +12,8 @@ namespace IScissors
 {
     public class Editor
     {
-        private Input Input => Game1.Input;
+        private Input Input { get; set; }
+        private GraphicsDevice Device { get; set; }
 
         private Vector2 cameraPos = new Vector2(20);
         private float zoom = 2;
@@ -28,14 +29,29 @@ namespace IScissors
         public float ImageHeight { get { return texture.Height; } }
 
         private Texture2D texture;
-        public Editor()
-        {
-            spriteBatch = new SpriteBatch(Game1.Device);
 
-            texture = Texture2D.FromStream(Game1.Device, File.OpenRead("Content\\ferry.bmp"));
+        public Editor(GraphicsDevice device, Input input)
+        {
+            Device = device;
+            Input = input;
+            TextureUtil.Device = device;
+
+            spriteBatch = new SpriteBatch(Device);
+            texture = Texture2D.FromStream(Device, File.OpenRead("Content\\ferry.bmp"));
 
             scissors = new Scissors();
             scissors.Load(texture);
+        }
+
+        public void Load(Texture2D texture)
+        {
+            this.texture = texture;
+            scissors.Load(texture);
+        }
+
+        public void Reset()
+        {
+            scissors.Clear();
         }
 
         public void Update()
@@ -48,7 +64,7 @@ namespace IScissors
             scissors.SetMousePos(mousePoint.X, mousePoint.Y);
             scissors.Update();
 
-            if (Input.MouseClicked())
+            if (Input.Pressed(MouseButton.Left))
                 scissors.AddSeed(mousePoint.X, mousePoint.Y);
 
             if (Input.Pressed(Keys.OemPlus))

@@ -16,29 +16,36 @@ namespace IScissors
 
     public class Input : GameComponent
     {
-        private MouseState mouseState;
-        private MouseState lastMouseState;
+        private IMouse mouseState;
+        private IMouse lastMouseState;
 
-        private KeyboardState keyboardState;
-        private KeyboardState lastKeyboardState;
+        private IKeyboard keyboardState;
+        private IKeyboard lastKeyboardState;
 
-        public Vector2 LastMousePosition
-        {
-            get { return new Vector2(lastMouseState.X, lastMouseState.Y); }
-        }
+        public Vector2 LastMousePosition => lastMouseState.MousePosition;
 
-        public Vector2 MousePosition
-        {
-            get { return new Vector2(mouseState.X, mouseState.Y); }
-        }
+        public Vector2 MousePosition => mouseState.MousePosition;
 
         public Vector2 MouseMoved
         {
             get { return MousePosition - LastMousePosition; }
         }
 
-        public Input(Game game) : base(game)
+        public Input(IMouse mouse, IKeyboard keyboard, Game game = null)
+            :base(game)
         {
+            mouseState = mouse;
+            keyboardState = keyboard;
+
+            //Stop problems with clicking on first frame
+            lastMouseState = mouse;
+            lastKeyboardState = keyboard;
+        }
+
+        public Input(Game game=null) : base(game)
+        {
+            mouseState = new XnaMouse();
+            keyboardState = new XnaKeyboard();
         }
 
         public Vector2 WorldPosition(Matrix world, Vector2 screenPosition)
@@ -48,11 +55,11 @@ namespace IScissors
 
         public override void Update(GameTime gameTime)
         {
-            lastKeyboardState = keyboardState;
-            lastMouseState = mouseState;
+            lastKeyboardState = keyboardState.Clone();
+            lastMouseState = mouseState.Clone();
 
-            keyboardState = Keyboard.GetState();
-            mouseState = Mouse.GetState();
+            keyboardState.Update();
+            mouseState.Update();
 
             base.Update(gameTime);
         }
@@ -67,62 +74,24 @@ namespace IScissors
             return keyboardState.IsKeyDown(key) && lastKeyboardState.IsKeyUp(key);
         }
 
+        public bool Released(Keys key)
+        {
+            return keyboardState.IsKeyUp(key) && lastKeyboardState.IsKeyDown(key);
+        }
+
         public bool Down(MouseButton button)
         {
-            switch (button)
-            {
-                case MouseButton.Left:
-                    return mouseState.LeftButton == ButtonState.Pressed;
-                case MouseButton.Right:
-                    return mouseState.RightButton == ButtonState.Pressed;
-                case MouseButton.Middle:
-                    return mouseState.MiddleButton == ButtonState.Pressed;
-            }
-            return false;
+            return mouseState.IsKeyDown(button);
         }
 
         public bool Pressed(MouseButton button)
         {
-            switch (button)
-            {
-                case MouseButton.Left:
-                    return lastMouseState.LeftButton == ButtonState.Released &&
-                           mouseState.LeftButton == ButtonState.Pressed;
-                case MouseButton.Right:
-                    return lastMouseState.RightButton == ButtonState.Released &&
-                           mouseState.RightButton == ButtonState.Pressed;
-                case MouseButton.Middle:
-                    return lastMouseState.MiddleButton == ButtonState.Released &&
-                           mouseState.MiddleButton == ButtonState.Pressed;
-            }
-            return false;
+            return mouseState.IsKeyDown(button) && lastMouseState.IsKeyUp(button);
         }
 
         public bool Released(MouseButton button)
         {
-            switch (button)
-            {
-                    case MouseButton.Left:
-                    return lastMouseState.LeftButton == ButtonState.Pressed &&
-                           mouseState.LeftButton == ButtonState.Released;
-                case MouseButton.Right:
-                    return lastMouseState.RightButton == ButtonState.Pressed &&
-                           mouseState.RightButton == ButtonState.Released;
-                case MouseButton.Middle:
-                    return lastMouseState.MiddleButton == ButtonState.Pressed &&
-                           mouseState.MiddleButton == ButtonState.Released;
-            }
-            return false;
-        }
-
-        public bool MouseDown()
-        {
-            return mouseState.LeftButton == ButtonState.Pressed;
-        }
-
-        public bool MouseClicked()
-        {
-            return mouseState.LeftButton == ButtonState.Released && lastMouseState.LeftButton == ButtonState.Pressed;
+            return mouseState.IsKeyUp(button) && lastMouseState.IsKeyDown(button);
         }
     }
 }
