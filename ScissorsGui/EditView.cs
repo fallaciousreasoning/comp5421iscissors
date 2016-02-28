@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
-using Enigma.Core;
 using IScissors;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ScissorsGui.Controls;
 
-namespace Editor
+namespace ScissorsGui
 {
     public class EditView : D3D11Host
     {
@@ -24,12 +18,11 @@ namespace Editor
 
         public EditView()
         {
+            Loaded += OnLoaded;
+
             mouse = new ManualMouse();
             keyboard = new ManualKeyboard();
-
             input = new Input(mouse, keyboard);
-
-            Loaded += OnLoaded;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
@@ -42,6 +35,9 @@ namespace Editor
             window.MouseMove += (o, args) => UpdateMouse(args);
             window.MouseDown += (o, args) => UpdateMouse(args);
             window.MouseUp += (o, args) => UpdateMouse(args);
+            window.MouseLeftButtonDown += (o, args) => UpdateMouse(args);
+            window.MouseLeftButtonUp += (o, args) => UpdateMouse(args);
+            window.MouseRightButtonDown += (o, args) => UpdateMouse(args);
             window.KeyUp += (o, e) => UpdateKeyBoard(e, false);
             window.KeyDown += (o, e) => UpdateKeyBoard(e, true);
         }
@@ -78,9 +74,9 @@ namespace Editor
 
         protected override void Initialize()
         {
-            editor = new IScissors.Editor(GraphicsDevice, input);
-
             input.Initialize();
+
+            editor = new IScissors.Editor(GraphicsDevice, input);
 
             base.Initialize();
         }
@@ -106,7 +102,7 @@ namespace Editor
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
-
+            //(new SpriteBatch(null)).Begin(0, null, null, null, null, null, Matrix.Identity);
             editor.Draw();
         }
     }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using IScissors.Extensions;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Priority_Queue;
+using Color=Microsoft.Xna.Framework.Color;
 
 namespace IScissors.Paths
 {
@@ -93,15 +94,15 @@ namespace IScissors.Paths
             var costs = new float[9];
             var start = new Point(x, y);
 
-            costs[0] = DiagonalDerivative(start, start + new Point(-1));
-            costs[1] = VerticalDerivative(start, start + new Point(0, -1));
-            costs[2] = DiagonalDerivative(start, start + new Point(1, -1));
-            costs[3] = HorizontalDerivative(start, start + new Point(-1, 0));
+            costs[0] = DiagonalDerivative(start, new Point(start.X -1, start.Y));
+            costs[1] = VerticalDerivative(start, new Point(start.X, start.Y-1));
+            costs[2] = DiagonalDerivative(start,  new Point(start.X + 1, start.Y-1));
+            costs[3] = HorizontalDerivative(start, new Point(start.X -1, start.Y));
             costs[4] = 0;
-            costs[5] = HorizontalDerivative(start, start + new Point(1, 0));
-            costs[6] = DiagonalDerivative(start, start + new Point(-1, 1));
-            costs[7] = VerticalDerivative(start, start + new Point(0, 1));
-            costs[8] = DiagonalDerivative(start, start + new Point(1));
+            costs[5] = HorizontalDerivative(start, new Point(start.X +1, start.Y));
+            costs[6] = DiagonalDerivative(start, new Point(start.X -1, start.Y+1));
+            costs[7] = VerticalDerivative(start, new Point(start.X, start.Y+1));
+            costs[8] = DiagonalDerivative(start, new Point(start.X+1,start.Y));
             //for (var i = -1; i <= 1; ++i)
             //    for (var j = -1; j <= 1; ++j)
             //    {
@@ -287,7 +288,6 @@ namespace IScissors.Paths
         {
             //If the point isn't on the image we shouldn't be returning anything
             if(!OnImage(endX, endY)) return new LinkedList<Point>();
-
             var path = new LinkedList<Point>();
 
             var c = pixelNodes[endX, endY];

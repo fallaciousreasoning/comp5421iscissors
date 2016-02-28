@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using IScissors;
+﻿using IScissors;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Enigma.Core
+namespace ScissorsGui
 {
     public class ManualMouse : IMouse
     {
@@ -51,7 +47,14 @@ namespace Enigma.Core
 
         public IMouse Clone()
         {
-            return (ManualMouse)MemberwiseClone();
+            return new ManualMouse()
+            {
+                LeftButton = LeftButton,
+                RightButton = RightButton,
+                MiddleButton = MiddleButton,
+                MousePosition = MousePosition,
+                ScrollWheelValue = ScrollWheelValue
+            };
         }
     }
 }

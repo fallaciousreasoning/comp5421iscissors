@@ -15,16 +15,16 @@ namespace IScissors
         private Input Input { get; set; }
         private GraphicsDevice Device { get; set; }
 
-        private Vector2 cameraPos = new Vector2(20);
-        private float zoom = 2;
+        private Vector2 cameraPos = new Vector2(0);
+        public float Zoom = 1;
 
         private Matrix world = Matrix.Identity;
 
         private readonly SpriteBatch spriteBatch;
-        private readonly Scissors scissors;
+        public Scissors Scissors { get; private set; }
 
-        public float ScreenWidth { get { return Game1.Device.Viewport.Width; } }
-        public float ScreenHeight { get { return Game1.Device.Viewport.Height; } }
+        public float ScreenWidth { get { return TextureUtil.Device.Viewport.Width; } }
+        public float ScreenHeight { get { return TextureUtil.Device.Viewport.Height; } }
         public float ImageWidth { get { return texture.Width; } }
         public float ImageHeight { get { return texture.Height; } }
 
@@ -39,40 +39,46 @@ namespace IScissors
             spriteBatch = new SpriteBatch(Device);
             texture = Texture2D.FromStream(Device, File.OpenRead("Content\\ferry.bmp"));
 
-            scissors = new Scissors();
-            scissors.Load(texture);
+            Scissors = new Scissors();
+            Scissors.Load(texture);
         }
 
         public void Load(Texture2D texture)
         {
             this.texture = texture;
-            scissors.Load(texture);
+            Scissors.Load(texture);
+
+            Zoom = 1;
+            cameraPos = Vector2.Zero;
         }
 
         public void Reset()
         {
-            scissors.Clear();
+            Scissors.Clear();
         }
 
         public void Update()
         {
-            world = Matrix.CreateTranslation(new Vector3(cameraPos, 0))*Matrix.CreateScale(zoom);
+            world = Matrix.CreateTranslation(new Vector3(cameraPos, 0))*Matrix.CreateScale(Zoom);
 
-            var mouseWorldPos = Input.MousePosition/zoom - cameraPos;
+            var mouseWorldPos = Input.MousePosition/Zoom - cameraPos;
             var mousePoint = new Point((int)mouseWorldPos.X, (int)mouseWorldPos.Y);
 
-            scissors.SetMousePos(mousePoint.X, mousePoint.Y);
-            scissors.Update();
+            Scissors.SetMousePos(mousePoint.X, mousePoint.Y);
+            Scissors.Update();
 
-            if (Input.Pressed(MouseButton.Left))
-                scissors.AddSeed(mousePoint.X, mousePoint.Y);
+            if (Input.Pressed(MouseButton.Left) && mousePoint.X >= 0 && mousePoint.Y >= 0 && mousePoint.X < ImageWidth && mousePoint.Y < ImageHeight && Scissors.Active) {
+                if(!Scissors.FirstPoint.HasValue || Vector2.Distance(Scissors.FirstPoint.Value, mouseWorldPos) > 5)
+                    Scissors.AddSeed(mousePoint.X, mousePoint.Y);
+                else Scissors.Close();
+            }
 
             if (Input.Pressed(Keys.OemPlus))
-                zoom += 1;
+                Zoom += 1;
             if (Input.Pressed(Keys.OemMinus))
-                zoom -= 1;
+                Zoom -= 1;
 
-            zoom = MathHelper.Clamp(zoom, 0.25f, 4);
+            Zoom = MathHelper.Clamp(Zoom, 0.25f, 4);
 
             if (Input.Pressed(Keys.Left))
                 cameraPos.X -= 10;
@@ -84,20 +90,25 @@ namespace IScissors
                 cameraPos.Y += 10;
 
             if (Input.Down(MouseButton.Right))
-                cameraPos += Input.MouseMoved/zoom;
+                cameraPos += Input.MouseMoved/Zoom;
 
             var imageSize = new Vector2(ImageWidth, ImageHeight);
             cameraPos = Vector2.Clamp(cameraPos, -imageSize,
-                new Vector2(ScreenWidth, ScreenHeight)/zoom);
+                new Vector2(ScreenWidth, ScreenHeight)/Zoom);
         }
 
         public void Draw()
         {
             spriteBatch.Begin(0, null, null, null, null, null, world);
-
-            scissors.Draw(spriteBatch);
+            Scissors.Draw(spriteBatch);
 
             spriteBatch.End();
+        }
+
+        public void ResetView()
+        {
+            Zoom = 1;
+            cameraPos =Vector2.Zero;
         }
     }
 }

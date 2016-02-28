@@ -44,7 +44,7 @@ namespace IScissors
                     colors[i + j*Width] = Colors[i, j];
                 }
 
-            var texture = new Texture2D(Game1.Device, Width, Height);
+            var texture = new Texture2D(TextureUtil.Device, Width, Height);
             texture.SetData(colors);
             return texture;
         }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using IScissors;
 using Microsoft.Xna.Framework.Input;
 
-namespace Enigma.Core
+namespace ScissorsGui
 {
     public class ManualKeyboard : IKeyboard
     {
@@ -37,7 +34,7 @@ namespace Enigma.Core
 
         public IKeyboard Clone()
         {
-            return (ManualKeyboard) MemberwiseClone();
+            return new ManualKeyboard() {keyStates = keyStates};
         }
     }
 }

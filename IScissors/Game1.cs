@@ -45,15 +45,16 @@ namespace IScissors
         /// </summary>
         protected override void Initialize()
         {
+            MenuComponent menu = new MenuComponent(this);
+            Components.Add(menu);
+
             base.Initialize();
 
             Input = new Input(this);
             Components.Add(Input);
 
-            Menu menu = new Menu(this);
-            Components.Add(menu);
-
             editor = new Editor(Device, Input);
+            menu.Editor = editor;
         }
 
         /// <summary>
