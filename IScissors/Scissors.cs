@@ -65,21 +65,6 @@ namespace IScissors
         public BasicImage Mask()
         {
             return Masker.GetMask(originalImage, solidPath);
-            var colors = new Color[originalImage.Width, originalImage.Height];
-            foreach (var point in solidPath)
-                colors[point.X, point.Y] = ConfirmedPathColor;
-
-            //TODO fill the shape made by the contour
-
-            //Pretty much, any pixels that are colored by the filled contour should be made a part of the masked image
-            for (var i = 0; i < originalImage.Width; ++i)
-                for (var j = 0; j < originalImage.Height; ++j)
-                {
-                    if (colors[i, j] != Color.Transparent)
-                        colors[i, j] = originalImage.Colors[i, j];
-                }
-
-            return new BasicImage(colors);
         }
 
         public BasicImage ImageWithContour()
