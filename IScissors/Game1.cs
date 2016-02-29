@@ -22,6 +22,7 @@ namespace IScissors
     {
         private static GraphicsDeviceManager graphics;
         public static GraphicsDevice Device { get { return graphics.GraphicsDevice; } }
+        public static MenuComponent Menu { get; private set; }
 
         public static Input Input { get; private set; }
 
@@ -45,8 +46,8 @@ namespace IScissors
         /// </summary>
         protected override void Initialize()
         {
-            MenuComponent menu = new MenuComponent(this);
-            Components.Add(menu);
+            Menu = new MenuComponent(this);
+            Components.Add(Menu);
 
             base.Initialize();
 
@@ -54,7 +55,7 @@ namespace IScissors
             Components.Add(Input);
 
             editor = new Editor(Device, Input);
-            menu.Editor = editor;
+            Menu.Editor = editor;
         }
 
         /// <summary>

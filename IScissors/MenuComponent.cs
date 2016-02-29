@@ -11,6 +11,9 @@ namespace IScissors
 {
     public class MenuComponent : GameComponent
     {
+        public bool HasMouse { get; private set; }
+        private bool menuActive;
+
         public Editor Editor
         {
             get { return editor; }
@@ -121,7 +124,7 @@ namespace IScissors
 
             root.Controls.Add(menuStrip);
 
-            RecursiveAdd(menuStrip);
+            AddMouseListener(menuStrip);
         }
 
         public void RefreshMenuItems()
@@ -133,49 +136,39 @@ namespace IScissors
             editMenu.DropDownItems[0].Enabled = Editor.Scissors.CanUndo();
         }
 
-        private void RecursiveAdd(Control control)
+        private void AddMouseListener(MenuStrip control)
         {
             if (control == null)
                 return;
 
-            control.MouseEnter += (o, e)=> HasMouse();
-            control.MouseLeave += (o, e) => LostMouse();
-
-            foreach (var c in control.Controls)
+            control.MouseEnter += (o, e)=> MouseEntered(o);
+            control.MouseLeave += (o, e) =>
             {
-                RecursiveAdd(c as ToolStripMenuItem);
-            }
-        }
-
-        private void RecursiveAdd(ToolStripMenuItem item)
-        {
-            if (item == null)
-                return;
-
-            item.MouseEnter += (o, e) => HasMouse();
-            item.MouseLeave += (o, e) => LostMouse();
-
-            foreach (var c in item.DropDownItems)
+                if (menuActive) return;
+                MouseExited(o);
+            };
+            control.MenuActivate += (o, e) =>
             {
-                if (c is ToolStripMenuItem)
-                    RecursiveAdd(c as ToolStripMenuItem);
-                else
-                {
-                    var i = c as ToolStripItem;
-                    i.MouseEnter += (o, e) => HasMouse();
-                    i.MouseLeave += (o, e) => LostMouse();
-                }
-            }
+                menuActive = true;
+                MouseEntered(o);
+            };
+            control.MenuDeactivate += (o, e) =>
+            {
+                menuActive = false;
+                MouseExited(o);
+            };
         }
 
-        private void HasMouse()
+        private void MouseEntered(object entered)
         {
-            Console.WriteLine("Has Mouse!");
+            HasMouse = true;
+            Console.WriteLine($"Has Mouse: {HasMouse}");
         }
 
-        private void LostMouse()
+        private void MouseExited(object exited)
         {
-            Console.WriteLine("Lost Mouse!");
+            HasMouse = false;
+            Console.WriteLine($"Has Mouse: {HasMouse}");
         }
 
         private string GetOpenFileName()

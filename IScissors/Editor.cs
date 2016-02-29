@@ -59,6 +59,9 @@ namespace IScissors
 
         public void Update()
         {
+            if (Game1.Menu?.HasMouse ?? false)
+                return;
+
             world = Matrix.CreateTranslation(new Vector3(cameraPos, 0))*Matrix.CreateScale(Zoom);
 
             var mouseWorldPos = Input.MousePosition/Zoom - cameraPos;
