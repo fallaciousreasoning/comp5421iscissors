@@ -37,6 +37,10 @@ namespace IScissors.Paths
             if (max.Y != -1) //If nothing went wrong, fill the image
                 Fill(input.Colors, colors, max);
 
+            //Remove the contour
+            foreach (var point in contour)
+                colors[point.X, point.Y] = input.Colors[point.X, point.Y];
+
             return new BasicImage(colors);
         }
 
