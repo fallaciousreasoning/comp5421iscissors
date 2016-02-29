@@ -42,12 +42,13 @@ namespace IScissors
 
         private BasicImage originalImage;
         private BasicImage gradientImage;
-        private BasicImage costImage;
+        private BasicImage blurredImage;
 
         private Texture2D pixelNodeTexture;
         private Texture2D originalTexture;
         private Texture2D gradientTexture;
         private Texture2D costTexture;
+        private Texture2D blurredTexture;
 
         private LiveWireDP pathFinder;
 
@@ -91,19 +92,24 @@ namespace IScissors
             return image;
         }
 
-        public void Load(Texture2D texture)
+        public void Load(Texture2D texture, int blur=0)
         {
             Clear();
 
             originalTexture = texture;
             originalImage = BasicImage.FromTexture(texture);
 
-            pathFinder = new LiveWireDP(originalImage);
+            blurredImage = blur == 0
+                ? originalImage.Duplicate()
+                : new GuassianBlur(blur, 1.4f).Apply(originalImage);
+            blurredTexture = blurredImage.ToTexture();
+
+            pathFinder = new LiveWireDP(blurredImage);
 
             costTexture = pathFinder.CostTexture;
             pixelNodeTexture = pathFinder.PixelNodeTexture;
 
-            gradientImage = new Sobel2().Apply(originalImage);
+            gradientImage = new Sobel2().Apply(blurredImage);
             gradientTexture = gradientImage.ToTexture();
         }
 
@@ -230,7 +236,7 @@ namespace IScissors
             switch (imageMode)
             {
                 case ImageMode.Default:
-                    spriteBatch.Draw(originalTexture, Vector2.Zero, Color.White);
+                    spriteBatch.Draw(blurredTexture, Vector2.Zero, Color.White);
                     break;
                 case ImageMode.Cost:
                     spriteBatch.Draw(costTexture, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, new Vector2(1/3f), SpriteEffects.None, 0f);
@@ -273,6 +279,11 @@ namespace IScissors
         public void SetImageMode(ImageMode imageMode)
         {
             this.imageMode = imageMode;
+        }
+
+        public void Blur(int i)
+        {
+            Load(originalTexture, i);
         }
     }
 }

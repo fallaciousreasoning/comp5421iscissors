@@ -30,7 +30,7 @@ namespace IScissors
         private ToolStripMenuItem viewMenu;
 
         private MenuStrip menuStrip;
-
+        private Blurrer blurrer;
         private Editor editor;
 
         public MenuComponent(Game game)
@@ -117,6 +117,17 @@ namespace IScissors
                 RefreshMenuItems();
             });
             menuStrip.Items.Add(actionMenu);
+
+            var optionsMenu = new ToolStripMenuItem("Options");
+            optionsMenu.DropDownItems.Add("Blur", null, (o, e) =>
+            {
+                blurrer = blurrer ?? new Blurrer()
+                {
+                    Completed = v => { Editor.Scissors.Blur(v); }
+                };
+                blurrer.ShowDialog();
+            });
+            menuStrip.Items.Add(optionsMenu);
 
             var helpMenu = new ToolStripMenuItem("Help");
             helpMenu.DropDownItems.Add("About", null, (o, e) => MessageBox.Show("Intelligent Scissors. A COMP 5421 Project by Jay Harris", "About"));
