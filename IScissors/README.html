@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>COMP 5421 Assignment 1</h1>
+
+<p>The project has all the basic requirements specified in the grading sheets. However, there are a couple of problems with it, that I feel worth mentioning. <br/><br/>Firstly, I wrote my own simple masking algorithm, as I didn't feel like using some third party library for what was a relatively small part of the project. The algorithm works as follows:
+<ul>
+	<li>For each point on the contour, color the pixel in the result image</li>
+	<li>Find the minimum point on the contour</li>
+	<li>Go up from this point till you find a blank pixel. This pixel must be inside the contour</li>
+	<li>Find all pixels with a depth first search that aren't colored and set them to the color in the original image. This is similar to paints 'fill' tool. </li>
+</ul>
+This works perfectly well unless the user defines a complex polygon (that is, a polygon that intersects itself), in which case only one of the areas of the polygon will be filled. For the purposes of this assignment I consider it adequate, as the focus is on the intelligent scissors algorithm.
+</p>
+
+</body>
+</html>
