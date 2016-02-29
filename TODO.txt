@@ -1,25 +1,25 @@
 Compulsory Features:
-	CS5421 Logo [https://course.cs.ust.hk/comp5421]
+	CS5421 Logo [https://course.cs.ust.hk/comp5421] (done)
 
-	Lenna [http://www-2.cs.cmu.edu/~chuck/lennapg/lenna.shtml]
+	Lenna [http://www-2.cs.cmu.edu/~chuck/lennapg/lenna.shtml] (done)
 
-	Avatar
+	Avatar (done)
 
-	Save Image with marked contour
-	Save mask of image
+	Save Image with marked contour (done)
+	Save mask of image (done)
 	Debug Features
-		Pixel Node
-		Cost Graph
-		Path Tree
-		Min Path
+		Pixel Node (maybe?)
+		Cost Graph (maybe?)
+		Path Tree (done)
+		Min Path (done)
 	Other UI Functions
-		Save Image
-		Load Image
-		Zoom In
-		Zoom Out
-		First Seed
-		Following Seeds
-		Finish Contour
+		Save Image (done)
+		Load Image (done)
+		Zoom In (done)
+		Zoom Out (done)
+		First Seed (done)
+		Following Seeds (done)
+		Finish Contour (done)
 		(some) unto
 	Artifact a composite of images made using the program
 	Webpage (a report/writeup in html)
