@@ -174,7 +174,7 @@ namespace IScissors
         private string GetOpenFileName()
         {
             var openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image Files|*.png|Image Files|*.jpg;*.jpeg|Image Files|*.bmp";
+            openFileDialog.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.bmp|Image Files|*.png|Image Files|*.jpg;*.jpeg|Image Files|*.bmp";
             openFileDialog.ShowDialog();
 
             return openFileDialog.FileName;
