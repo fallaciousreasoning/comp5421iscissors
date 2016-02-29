@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F7EA3E9B-6725-4A8C-ABD6-A62B7400F944}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IScissors</RootNamespace>
     <AssemblyName>IScissors</AssemblyName>
@@ -37,6 +37,9 @@
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="BasicImage.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
@@ -57,6 +60,7 @@
     <Compile Include="MenuComponent.cs" />
     <Compile Include="Paths\IPathFinder.cs" />
     <Compile Include="Paths\LiveWireDP.cs" />
+    <Compile Include="Paths\Masker.cs" />
     <Compile Include="Paths\PixelNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

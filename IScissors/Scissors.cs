@@ -64,6 +64,7 @@ namespace IScissors
 
         public BasicImage Mask()
         {
+            return Masker.GetMask(originalImage, solidPath);
             var colors = new Color[originalImage.Width, originalImage.Height];
             foreach (var point in solidPath)
                 colors[point.X, point.Y] = ConfirmedPathColor;
