@@ -13,6 +13,8 @@ namespace IScissors.Paths
     public class LiveWireDP : IPathFinder
     {
         public Texture2D CostTexture { get; private set; }
+        public Texture2D PixelNodeTexture { get; private set; }
+
         private int iteration;
 
         private readonly BasicImage originalImage;
@@ -55,12 +57,21 @@ namespace IScissors.Paths
                     for (var k = 0; k < 3; ++k)
                         for (var l = 0; l < 3; ++l)
                         {
-                            costColors[x + k, y + k] = ColorExtensions.FromIntensity(pixelNodes[i, j].LinkCosts[k + 3*l]/255);
+                            costColors[x + k, y + k] = ColorExtensions.FromIntensity(pixelNodes[i, j].LinkCosts[k + 3*l]/maxEdgeCost);
                         }
                     costColors[x + 1, y + 1] = originalImage.Colors[i, j];
                 }
             costImage = new BasicImage(costColors);
             CostTexture = costImage.ToTexture();
+
+            var pixelNodeColors = new Color[originalImage.Width*3, originalImage.Height*3];
+            for (var i = 0; i < originalImage.Width*3; i++)
+                for (var j = 0; j < originalImage.Height*3; ++j)
+                {
+                    pixelNodeColors[i, j] = Color.Black;
+                    if (i%3 == 0 && j%3 == 0) pixelNodeColors[i, j] = originalImage.Colors[i/3, j/3];
+                }
+            PixelNodeTexture = new BasicImage(pixelNodeColors).ToTexture();
         }
 
         private void LoadCosts()

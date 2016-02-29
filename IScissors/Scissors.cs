@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using IScissors.Filters;
 using IScissors.Paths;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -43,6 +44,7 @@ namespace IScissors
         private BasicImage gradientImage;
         private BasicImage costImage;
 
+        private Texture2D pixelNodeTexture;
         private Texture2D originalTexture;
         private Texture2D gradientTexture;
         private Texture2D costTexture;
@@ -52,6 +54,7 @@ namespace IScissors
         private Point mousePos = new Point(0,0);
         private Point lastMousePos = new Point(0,0);
         private bool updated;
+        private ImageMode imageMode = ImageMode.Default;
 
         //Indicates whether the path to the mouse point should be drawn
         public bool Active { get; private set; }
@@ -96,6 +99,12 @@ namespace IScissors
             originalImage = BasicImage.FromTexture(texture);
 
             pathFinder = new LiveWireDP(originalImage);
+
+            costTexture = pathFinder.CostTexture;
+            pixelNodeTexture = pathFinder.PixelNodeTexture;
+
+            gradientImage = new Sobel2().Apply(originalImage);
+            gradientTexture = gradientImage.ToTexture();
         }
 
         public bool CanClose()
@@ -218,7 +227,21 @@ namespace IScissors
         {
             if (originalTexture == null) return;
 
-            spriteBatch.Draw(originalTexture, Vector2.Zero, Color.White);
+            switch (imageMode)
+            {
+                case ImageMode.Default:
+                    spriteBatch.Draw(originalTexture, Vector2.Zero, Color.White);
+                    break;
+                case ImageMode.Cost:
+                    spriteBatch.Draw(costTexture, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, new Vector2(1/3f), SpriteEffects.None, 0f);
+                    break;
+                case ImageMode.PixelNode:
+                    spriteBatch.Draw(pixelNodeTexture, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, new Vector2(1 / 3f), SpriteEffects.None, 0f);
+                    break;
+                case ImageMode.Sobel:
+                    spriteBatch.Draw(gradientTexture, Vector2.Zero, Color.White);
+                    break;
+            }
             //spriteBatch.Draw(pathFinder.CostTexture, Vector2.Zero, Color.White);
 
             //Draw the confirmed path
@@ -249,8 +272,7 @@ namespace IScissors
 
         public void SetImageMode(ImageMode imageMode)
         {
-            throw new NotImplementedException();
-            //TODO
+            this.imageMode = imageMode;
         }
     }
 }

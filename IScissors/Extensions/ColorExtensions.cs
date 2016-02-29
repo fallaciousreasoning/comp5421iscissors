@@ -16,7 +16,7 @@ namespace IScissors.Extensions
         public static Color FromIntensity(float intensity)
         {
             var b = (byte) (intensity*255);
-            return new Color(b,b,b);
+            return new Color(b,b,b,255);
         }
 
         public static byte[] ToByteArray(this Color color)
