@@ -70,7 +70,7 @@
             this.blurRadiusLabel.Name = "blurRadiusLabel";
             this.blurRadiusLabel.Size = new System.Drawing.Size(13, 13);
             this.blurRadiusLabel.TabIndex = 3;
-            this.blurRadiusLabel.Text = "1";
+            this.blurRadiusLabel.Text = "0";
             // 
             // Blurrer
             // 

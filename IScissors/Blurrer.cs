@@ -25,12 +25,12 @@ namespace IScissors
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            Close();
+            Hide();
         }
 
         private void okayButton_Click(object sender, EventArgs e)
         {
-            Close();
+            Hide();
             Completed?.Invoke(blurRadiusSlider.Value);
         }
     }
