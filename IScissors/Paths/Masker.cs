@@ -30,9 +30,10 @@ namespace IScissors.Paths
                 colors[point.X, point.Y] = Color.Black;
             }
 
+            //Find the first point above the max point that is not part of the contour
             while (max.Y >= 0 && colors[max.X, max.Y] != Color.Transparent)
                 max.Y--;
-
+            
             if (max.Y != -1) //If nothing went wrong, fill the image
                 Fill(input.Colors, colors, max);
 
