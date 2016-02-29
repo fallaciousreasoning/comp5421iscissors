@@ -238,6 +238,7 @@ namespace IScissors.Paths
             var priorityQueue = new FastPriorityQueue<PixelNode>(originalImage.Width * originalImage.Height);
 
             var seed = pixelNodes[seedX, seedY];
+            seed.Cost = 0;
             seed.Previous = null;
             priorityQueue.Enqueue(seed, 0);
 
@@ -253,7 +254,7 @@ namespace IScissors.Paths
                     {
                         var nX = current.X + i;
                         var nY = current.Y + j;
-                        if (!OnImage(nX, nY)) continue;
+                        if (!OnImage(nX, nY) || (i == j && i == 0)) continue;
 
                         var neighbor = pixelNodes[nX, nY];
 
@@ -282,24 +283,25 @@ namespace IScissors.Paths
                 }
 
             } while (priorityQueue.Count > 0);
+            iteration++;
         }
 
         public LinkedList<Point> FindPath(int endX, int endY)
         {
+            const int MAX_DEPTH = 1000;
             //If the point isn't on the image we shouldn't be returning anything
             if(!OnImage(endX, endY)) return new LinkedList<Point>();
             var path = new LinkedList<Point>();
-
             var c = pixelNodes[endX, endY];
+            var depth = 0;
             pixelNodes[seedX, seedY].Previous = null;
             do
             {
                 path.AddFirst(new Point(c.X, c.Y));
                 c = c.Previous;
-            } while (c != null);
+                depth++;
+            } while (c != null&&depth < MAX_DEPTH);
 
-            
-            iteration++;
             return path;
         }
     }

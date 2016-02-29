@@ -22,7 +22,20 @@ namespace IScissors
         private LinkedList<Point> seedPoints = new LinkedList<Point>();
 
         //The path the user has confirmed so far.
-        private LinkedList<Point> solidPath = new LinkedList<Point>();
+        private LinkedList<LinkedList<Point>> solidPath = new LinkedList<LinkedList<Point>>();
+
+        public LinkedList<Point> Contour
+        {
+            get
+            {
+                var result = new LinkedList<Point>();
+                foreach (var segment in solidPath)
+                    foreach (var point in segment)
+                        result.AddLast(point);
+
+                return result;
+            }
+        } 
         //The path from the last seed point to the users mouse.
         private LinkedList<Point> unconfirmedPath = new LinkedList<Point>();
 
@@ -64,13 +77,13 @@ namespace IScissors
 
         public BasicImage Mask()
         {
-            return Masker.GetMask(originalImage, solidPath);
+            return Masker.GetMask(originalImage, Contour);
         }
 
         public BasicImage ImageWithContour()
         {
             var image = originalImage.Duplicate();
-            foreach (var point in solidPath)
+            foreach (var point in Contour)
                 image.Colors[point.X, point.Y] = ConfirmedPathColor;
             return image;
         }
@@ -122,7 +135,7 @@ namespace IScissors
                 //TODO add the path between the last seed and this one
                 var previous = seedPoints.Last.Value;
                 var path = pathFinder.FindPath(seed.X, seed.Y);
-                foreach (var node in path) solidPath.AddLast(node);
+                solidPath.AddLast(path);
             }
 
             seedPoints.AddLast(seed);
@@ -146,11 +159,26 @@ namespace IScissors
             var node = solidPath.Last;
             
             //TODO remove all the points added since the last seed
-
+            if (solidPath.Count > 0)
+                solidPath.RemoveLast();
             seedPoints.RemoveLast();
+
+            seed = seedPoints.Count == 0 ? new Point(0) : seedPoints.Last.Value;
+
+            if (seedPoints.Count == 0)
+            {
+                unconfirmedPath.Clear();
+            }
+            else
+            {
+                pathFinder.SetSeed(seed.X, seed.Y);
+            }
+
             if (Closed)
             {
                 Closed = false;
+                Active = true;
+                pathFinder.SetSeed(seedPoints.Last.Value.X, seedPoints.Last.Value.Y);
             }
         }
 
@@ -194,7 +222,8 @@ namespace IScissors
             //spriteBatch.Draw(pathFinder.CostTexture, Vector2.Zero, Color.White);
 
             //Draw the confirmed path
-            foreach(var p in solidPath)
+            foreach(var segment in solidPath)
+                foreach (var p in segment)
                 spriteBatch.Draw(point, new Vector2(p.X, p.Y), ConfirmedPathColor);
 
             //Draw the unconfirmed path
