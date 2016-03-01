@@ -70,6 +70,12 @@ namespace IScissors
             Scissors.SetMousePos(mousePoint.X, mousePoint.Y);
             Scissors.Update();
 
+            if ((Input.Down(Keys.LeftControl) || Input.Down(Keys.RightControl)) &&
+                Input.Pressed(MouseButton.Left) && !Scissors.Active && Scissors.CanStart())
+            {
+                Scissors.Resume();
+            }
+
             if (Input.Pressed(MouseButton.Left) && mousePoint.X >= 0 && mousePoint.Y >= 0 && mousePoint.X < ImageWidth && mousePoint.Y < ImageHeight && Scissors.Active) {
                 if(!Scissors.FirstPoint.HasValue || Vector2.Distance(Scissors.FirstPoint.Value, mouseWorldPos) > 5)
                     Scissors.AddSeed(mousePoint.X, mousePoint.Y);
@@ -92,12 +98,19 @@ namespace IScissors
             if (Input.Pressed(Keys.Down))
                 cameraPos.Y += 10;
 
-            if (Input.Down(MouseButton.Right))
+            if (Input.Down(MouseButton.Right) || Input.Down(Keys.Space))
                 cameraPos += Input.MouseMoved/Zoom;
 
             var imageSize = new Vector2(ImageWidth, ImageHeight);
             cameraPos = Vector2.Clamp(cameraPos, -imageSize,
                 new Vector2(ScreenWidth, ScreenHeight)/Zoom);
+
+            if (Input.Pressed(Keys.Enter) && Scissors.CanClose())
+                Scissors.Close();
+
+            if (Input.Pressed(Keys.Back) && Scissors.CanUndo())
+                Scissors.Undo();
+            
         }
 
         public void Draw()
