@@ -50,7 +50,7 @@ namespace IScissors
             fileMenu.DropDownItems.Add("Save Contour", null, (o, e) =>
             {
                 var filename = GetSaveFileName();
-                if (filename == null) return;
+                if (filename == null || !filename.EndsWith(".png")) return;
 
                 var contourImage = Editor.Scissors.ImageWithContour();
                 var contourTexture = contourImage.ToTexture();
@@ -60,7 +60,7 @@ namespace IScissors
             fileMenu.DropDownItems.Add("Save Mask", null, (o, e) =>
             {
                 var filename = GetSaveFileName();
-                if (filename == null) return;
+                if (filename == null || !filename.EndsWith(".png")) return;
 
                 var contourImage = Editor.Scissors.Mask();
                 var contourTexture = contourImage.ToTexture();
@@ -73,6 +73,7 @@ namespace IScissors
                 if (filename == null) return;
 
                 var texture = LoadTexture(filename);
+                if (texture == null) return; 
                 Editor.Load(texture);
             });
             fileMenu.DropDownItems.Add("Clear", null, (o, e) => Editor.Reset());
