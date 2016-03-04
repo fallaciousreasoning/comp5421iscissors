@@ -57,6 +57,7 @@ namespace IScissors.Paths
                     for (var k = 0; k < 3; ++k)
                         for (var l = 0; l < 3; ++l)
                         {
+                            if (k == l && k == 1) continue;
                             costColors[x + k, y + k] = ColorExtensions.FromIntensity(pixelNodes[i, j].LinkCosts[k + 3*l]/maxEdgeCost);
                         }
                     costColors[x + 1, y + 1] = originalImage.Colors[i, j];
@@ -87,7 +88,11 @@ namespace IScissors.Paths
                     var pixelNode = pixelNodes[x, y];
 
                     for (var k = 0; k < pixelNode.LinkDerivates.Length; ++k)
-                        pixelNode.LinkCosts[k] = (maxDerivative - pixelNode.LinkDerivates[k])*lengths[k];
+                    {
+                        var cost = (maxDerivative - pixelNode.LinkDerivates[k])*lengths[k];
+                        if (cost > maxEdgeCost) maxEdgeCost = cost;
+                        pixelNode.LinkCosts[k] = cost;
+                    }
                 }
         }
 
