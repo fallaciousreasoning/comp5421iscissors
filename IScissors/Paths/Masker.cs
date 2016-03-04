@@ -81,5 +81,58 @@ namespace IScissors.Paths
                     }
             } while (frontier.Count > 0);
         }
+
+        public static BasicImage BetterMask(BasicImage input, IEnumerable<Point> contour)
+        {
+            var original = input.Colors;
+            var mask = new Color[original.GetLength(0), original.GetLength(1)];
+            foreach (var point in contour) mask[point.X, point.Y] = Color.Black;
+
+            var visited = new HashSet<Point>();
+            var frontier = new Stack<Point>();
+
+            var topLeft =  new Point(0,0);
+            var topRight = new Point(original.GetLength(0) - 1, 0);
+            var bottomLeft = new Point(0, original.GetLength(1) - 1);
+            var bottomRight = new Point(original.GetLength(0) - 1, original.GetLength(1) - 1);
+
+            frontier.Push(topLeft);
+            frontier.Push(topRight);
+            frontier.Push(bottomLeft);
+            frontier.Push(bottomRight);
+
+            do
+            {
+                var current = frontier.Pop();
+
+                //If we've already seen this point, skip it
+                if (visited.Contains(current)) continue;
+
+                visited.Add(current);
+
+                mask[current.X, current.Y] = Color.Black;
+
+                for (var i = -1; i <= 1; ++i)
+                    for (var j = -1; j <= 1; ++j)
+                    {
+                        //No diagonals
+                        if (i == j || i == -j) continue;
+
+                        var x = i + current.X;
+                        var y = j + current.Y;
+
+                        //If the pixel isn't on the image, continue
+                        if (x < 0 || y < 0 || x >= original.GetLength(0) || y >= original.GetLength(1)) continue;
+
+                        //If the pixel has been filled, ignore it
+                        if (mask[x, y] != Color.Transparent) continue;
+
+                        //Add the pixel to the frontier
+                        frontier.Push(new Point(x, y));
+                    }
+            } while (frontier.Count > 0);
+
+            return new BasicImage(original).Mask(new BasicImage(mask), Color.Transparent);
+        }
     }
 }

@@ -81,7 +81,7 @@ namespace IScissors
 
         public BasicImage Mask()
         {
-            return Masker.GetMask(originalImage, Contour);
+            return Masker.BetterMask(originalImage, Contour);
         }
 
         public BasicImage ImageWithContour()

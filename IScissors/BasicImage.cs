@@ -62,6 +62,18 @@ namespace IScissors
             return new BasicImage(colors);
         }
 
+        public BasicImage Mask(BasicImage with, Color maskColor)
+        {
+            var result = new Color[Width, Height];
+            for (var i = 0; i < Width; ++i)
+                for (var j = 0; j < Height; ++j)
+                {
+                    if (with.Colors[i, j] != maskColor) continue;
+                    result[i, j] = Colors[i, j];
+                }
+            return new BasicImage(result);
+        }
+
         public static BasicImage operator +(BasicImage first, BasicImage second)
         {
             if (first.Width != second.Width || first.Height!= second.Height) throw new ArgumentException();
