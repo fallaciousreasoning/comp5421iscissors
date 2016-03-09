@@ -14,6 +14,7 @@ namespace IScissors.Paths
     {
         public Texture2D CostTexture { get; private set; }
         public Texture2D PixelNodeTexture { get; private set; }
+        public Texture2D PathTreeTexture { get; private set; }
 
         private int iteration;
 
@@ -251,6 +252,7 @@ namespace IScissors.Paths
             this.seedX = seedX;
             this.seedY = seedY;
 
+            var pathTreeColors = new Color[3 * originalImage.Width, 3 * originalImage.Height];
             var priorityQueue = new FastPriorityQueue<PixelNode>(originalImage.Width * originalImage.Height);
 
             var seed = pixelNodes[seedX, seedY];
@@ -262,6 +264,21 @@ namespace IScissors.Paths
             {
                 var current = priorityQueue.Dequeue();
                 current.State = NodeState.Expanded;
+
+                var x = current.X;
+                var y = current.Y;
+
+                if (current.Previous != null)
+                {
+                    var l = current.Previous.X - x;
+                    var k = current.Previous.Y - y;
+
+                    var color = new Color(0, 160, 0);
+                    pathTreeColors[3 * x + l, 3 * y + k] = color;
+
+                    color = new Color(0, 200, 0);
+                    pathTreeColors[3 * x + 2 * l, 3 * y + 2 * k] = color;
+                }
 
                 //Examine the node's neighbors
                 for (var i = -1; i <= 1; i++)
@@ -300,6 +317,8 @@ namespace IScissors.Paths
 
             } while (priorityQueue.Count > 0);
             iteration++;
+
+            PathTreeTexture = new BasicImage(pathTreeColors).ToTexture();
         }
 
         public LinkedList<Point> FindPath(int endX, int endY)

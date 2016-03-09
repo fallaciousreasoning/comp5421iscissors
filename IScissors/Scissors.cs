@@ -247,6 +247,10 @@ namespace IScissors
                 case ImageMode.Sobel:
                     spriteBatch.Draw(gradientTexture, Vector2.Zero, Color.White);
                     break;
+                case ImageMode.PathTree:
+                    if (pathFinder.PathTreeTexture != null)
+                        spriteBatch.Draw(pathFinder.PathTreeTexture, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, new Vector2(1 / 3f), SpriteEffects.None, 0f);
+                    break;
             }
             //spriteBatch.Draw(pathFinder.CostTexture, Vector2.Zero, Color.White);
 

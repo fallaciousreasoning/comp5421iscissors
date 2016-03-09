@@ -26,7 +26,7 @@ Compulsory Features:
 	Bells & Whistles
 		Options:
 			One problem with the live wire is that it prefers shorter paths so will tend to cut through large object rather than wrap around them.  One way to fix this is specify a specific region in which the path must stay.  As long as this region contains the object boundary but excludes most of the interior, the path will be forced to follow the boundary.  One way of specifying such a region is to use a thick (e.g., 50 pixel wide) paint brush.  Implement this feature.  Note:  we already provide support for brushing a region using a selection buffer, in the same way as for project0.
-			Allow setting of image blur before computing the path and describe optimizations
+			Allow setting of image blur before computing the path and describe optimizations (done)
 			Try different cost functions (such as the one decided in the paper)
 			Seed snapping feature (the seed point also snaps to an edge)
 			Implement Path Cooling (as described in the paper)

@@ -98,6 +98,7 @@ namespace IScissors
             imageMenu.DropDownItems.Add("Costs", null, (o, e) => Editor.Scissors.SetImageMode(ImageMode.Cost));
             imageMenu.DropDownItems.Add("Pixel Nodes", null, (o, e) => Editor.Scissors.SetImageMode(ImageMode.PixelNode));
             imageMenu.DropDownItems.Add("Sobel", null, (o, e) => Editor.Scissors.SetImageMode(ImageMode.Sobel));
+            imageMenu.DropDownItems.Add("Path Tree", null, (o, e) => Editor.Scissors.SetImageMode(ImageMode.PathTree));
             viewMenu.DropDownItems.Add(imageMenu);
             menuStrip.Items.Add(viewMenu);
 
@@ -232,6 +233,7 @@ namespace IScissors
         Default,
         Cost,
         PixelNode,
-        Sobel
+        Sobel,
+        PathTree
     }
 }
